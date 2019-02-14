@@ -1,0 +1,85 @@
+﻿<Window x:Class="GUI_AgentAssignments.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GUI_AgentAssignments"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--Agent Information-->
+        <Grid Grid.Row="0" Grid.Column="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0">Id</Label>
+            <Label Grid.Row="1">CodeName</Label>
+            <Label Grid.Row="2">Speciality</Label>
+            <Label Grid.Row="3">Assignment</Label>
+
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentAgent.ID}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentAgent.CodeName}"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentAgent.Speciality}"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentAgent.Assignment}" AcceptsReturn="True" Height="80"/>
+            
+            <!--Navigation and Add Buttons-->
+            <Grid Grid.Column="1" Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Button Name="PreviousButton"
+                        Content="&lt;" 
+                        Padding="20 0" 
+                        Margin="10" 
+                        Command="{Binding PreviousAgentCommand}"/>
+                <Button Name="NextButton"
+                        Grid.Column="1" 
+                        Content="&gt;" 
+                        Padding="20 0" 
+                        Margin="10"
+                        Command="{Binding NextAgentCommand}"/>
+                <Button Grid.Row="1" Content="Add" Padding="20 0" Margin="10" Command="{Binding AddAgentCommand}"/>
+            </Grid>
+        </Grid>
+
+        <!--Agents List-->
+        <ListView Grid.Column="1"
+                  Name="AgentLv"
+                  Grid.RowSpan="2"
+                  ItemsSource="{Binding Agents}"
+                  SelectedIndex="{Binding SelectedIndex}"
+                  SelectedItem="{Binding CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <WrapPanel>
+                        <TextBlock Text="{Binding ID}"/>
+                        <TextBlock Text=", "/>
+                        <TextBlock Text="{Binding CodeName}"/>
+                    </WrapPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+    </Grid>
+</Window>
