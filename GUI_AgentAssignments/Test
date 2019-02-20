@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAgent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Agent>
+    <ID>007</ID>
+    <CodeName>James Bond</CodeName>
+    <Speciality>License to kill</Speciality>
+    <Assignment>Kill Bad Guy</Assignment>
+  </Agent>
+  <Agent>
+    <ID>001</ID>
+    <CodeName>Nina</CodeName>
+    <Speciality>Looks</Speciality>
+    <Assignment>Charm Bad Guy</Assignment>
+  </Agent>
+</ArrayOfAgent>

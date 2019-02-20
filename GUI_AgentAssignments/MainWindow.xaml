@@ -3,17 +3,55 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:GUI_AgentAssignments"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="5">
+    <Grid Margin="5"          >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!--Header Menu-->
+        <Menu Grid.Row="0" Grid.ColumnSpan="2">
+            <MenuItem Header="File">
+                <MenuItem Header="_New" Command="{Binding FileHeaderViewModel.NewFileCommand}"/>
+                <MenuItem Header="_Open" Command="{Binding FileHeaderViewModel.OpenFileCommand}"/>
+                <MenuItem Header="_Save" Command="{Binding FileHeaderViewModel.SaveFileCommand}"/>
+                <MenuItem Header="Save _As" Command="{Binding FileHeaderViewModel.SaveFileAsCommand}"/>
+                <MenuItem Header="E_xit" Command="{Binding FileHeaderViewModel.ExitAppCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Agents">
+                <MenuItem Header="Previous" Command="{Binding AgentViewModel.PreviousAgentCommand}"/>
+                <MenuItem Header="Next" Command="{Binding AgentViewModel.NextAgentCommand}"/>
+                <MenuItem Header="Add New" Command="{Binding AgentViewModel.AddAgentCommand}"/>
+                <MenuItem Header="Delete" Command="{Binding AgentViewModel.DeleteAgentCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <!--Toolbar-->
+        <ToolBarTray Grid.Row="1" Grid.ColumnSpan="2">
+            <ToolBar FontWeight="Bold" FontSize="20">
+                <Button Content="&lt;" 
+                        Command="{Binding AgentViewModel.PreviousAgentCommand}"/>
+                <Button Content="&gt;" 
+                        Command="{Binding AgentViewModel.NextAgentCommand}"/>
+                <Button Content="+" 
+                        Command="{Binding AgentViewModel.AddAgentCommand}"/>
+                <Button Content="-" 
+                        Command="{Binding AgentViewModel.DeleteAgentCommand}"/>
+
+            </ToolBar>
+        </ToolBarTray>
 
         <!--Agent Information-->
-        <Grid Grid.Row="0" Grid.Column="0" >
+        <Grid Grid.Row="2" Grid.Column="0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="2*"/>
@@ -31,10 +69,10 @@
             <Label Grid.Row="2">Speciality</Label>
             <Label Grid.Row="3">Assignment</Label>
 
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentAgent.ID}"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentAgent.CodeName}"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentAgent.Speciality}"/>
-            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentAgent.Assignment}" AcceptsReturn="True" Height="80"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AgentViewModel.CurrentAgent.ID}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding AgentViewModel.CurrentAgent.CodeName}"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AgentViewModel.CurrentAgent.Speciality}"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding AgentViewModel.CurrentAgent.Assignment}" AcceptsReturn="True" Height="80"/>
             
             <!--Navigation and Add Buttons-->
             <Grid Grid.Column="1" Grid.Row="4">
@@ -51,24 +89,29 @@
                         Content="&lt;" 
                         Padding="20 0" 
                         Margin="10" 
-                        Command="{Binding PreviousAgentCommand}"/>
+                        Command="{Binding AgentViewModel.PreviousAgentCommand}"/>
                 <Button Name="NextButton"
                         Grid.Column="1" 
                         Content="&gt;" 
                         Padding="20 0" 
                         Margin="10"
-                        Command="{Binding NextAgentCommand}"/>
-                <Button Grid.Row="1" Content="Add" Padding="20 0" Margin="10" Command="{Binding AddAgentCommand}"/>
+                        Command="{Binding AgentViewModel.NextAgentCommand}"/>
+                <Button Grid.Row="1" 
+                        Content="Add" 
+                        Padding="20 0" 
+                        Margin="10" 
+                        Command="{Binding AddAgentCommand}"/>
             </Grid>
         </Grid>
 
         <!--Agents List-->
         <ListView Grid.Column="1"
+                  Grid.Row="2"
                   Name="AgentLv"
                   Grid.RowSpan="2"
-                  ItemsSource="{Binding Agents}"
-                  SelectedIndex="{Binding SelectedIndex}"
-                  SelectedItem="{Binding CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  ItemsSource="{Binding AgentViewModel.Agents}"
+                  SelectedIndex="{Binding AgentViewModel.SelectedIndex}"
+                  SelectedItem="{Binding AgentViewModel.CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
             <ListView.ItemTemplate>
                 <DataTemplate>

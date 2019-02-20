@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Prism.Events;
 
 namespace GUI_AgentAssignments
 {
@@ -20,10 +21,17 @@ namespace GUI_AgentAssignments
     /// </summary>
     public partial class MainWindow : Window
     {
+        public AgentViewModel AgentViewModel { get; set; }
+        public FileHeaderViewModel FileHeaderViewModel { get; set; }
+        public EventAggregator EventAggregator { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new AgentViewModel();
+            EventAggregator = new EventAggregator();
+            AgentViewModel = new AgentViewModel(EventAggregator);
+            FileHeaderViewModel = new FileHeaderViewModel(EventAggregator);
+            FileHeaderViewModel.AgentViewModel = AgentViewModel;
+            DataContext = this;
         }
     }
 }

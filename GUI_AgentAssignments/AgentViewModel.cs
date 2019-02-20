@@ -3,18 +3,42 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using GUI_AgentAssignments.Annotations;
+using Prism.Commands;
+using Prism.Events;
 
 namespace GUI_AgentAssignments
 {
+
+    public class RequestAgentsListEvent : PubSubEvent { }
     public class AgentViewModel : INotifyPropertyChanged
     {
         private Agent _currentAgent;
         private int _selectedIndex = -1;
+        private ICommand _previousAgentCommand;
+        private ICommand _nextAgentCommand;
+        private ICommand _addAgentCommand;
+        private ICommand _deleteAgentCommand;
+        private IEventAggregator _eventAggregator;
+
+        public AgentViewModel(IEventAggregator ea)
+        {
+            _eventAggregator = ea;
+            _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentRequest);
+            CurrentAgent = new Agent();
+            Agents = new Agents()
+            {
+                new Agent("007","James Bond","License to kill","Kill Bad Guy"),
+                new Agent("001","Nina","Looks","Charm Bad Guy")
+            };
+        }
+
         public Agent CurrentAgent
         {
             get => _currentAgent;
@@ -22,14 +46,7 @@ namespace GUI_AgentAssignments
             {
                 if (_currentAgent == value)
                     return;
-                if (value != null)
-                {
-                    _currentAgent = value;
-                }
-                else
-                {
-                    _currentAgent = new Agent();
-                }
+                _currentAgent = value ?? new Agent();
                 OnPropertyChanged(nameof(CurrentAgent));
             }
         }
@@ -42,25 +59,41 @@ namespace GUI_AgentAssignments
             {
                 if (_selectedIndex == value)
                     return;
-                _selectedIndex = value;
+                _selectedIndex = value >= -1 && value < Agents.Count ? value : -1 ;
                 OnPropertyChanged(nameof(SelectedIndex));
             }
         }
-        public ICommand PreviousAgentCommand { get; set; }
-        public ICommand NextAgentCommand { get; set; }
-        public ICommand AddAgentCommand { get; set; }
 
-        public AgentViewModel()
+        public ICommand PreviousAgentCommand
         {
-            CurrentAgent = new Agent();
-            Agents = new Agents()
-            {
-                new Agent("007","James Bond","License to kill","Kill Bad Guy"),
-                new Agent("001","Nina","Looks","Charm Bad Guy")
-            };
-            AddAgentCommand = new RelayCommand(()=>AddAgent());
-            PreviousAgentCommand = new RelayCommand(()=>PreviousAgent());
-            NextAgentCommand = new RelayCommand(()=>NextAgent());
+            get => _previousAgentCommand?? new DelegateCommand(PreviousAgent);
+            private set => _previousAgentCommand = value;
+        }
+
+        public ICommand NextAgentCommand
+        {
+            get => _nextAgentCommand?? new DelegateCommand(NextAgent);
+            private set => _nextAgentCommand = value;
+        }
+
+        public ICommand AddAgentCommand
+        {
+            get => _addAgentCommand?? new DelegateCommand(AddAgent);
+            private set => _addAgentCommand = value;
+        }
+
+        public ICommand DeleteAgentCommand
+        {
+            get => _deleteAgentCommand?? new DelegateCommand(DeleteAgent);
+            private set => _deleteAgentCommand = value;
+        }
+
+
+        private void DeleteAgent()
+        {
+            if (SelectedIndex < 0)
+                return;
+            Agents.RemoveAt(SelectedIndex);
         }
 
         private void PreviousAgent()
@@ -79,12 +112,6 @@ namespace GUI_AgentAssignments
             }
         }
 
-        private void SelectionChanged(object parameter)
-        {
-            if (SelectedIndex >= 0 && parameter is Agent agent)
-                CurrentAgent = agent;
-        }
-
         private void AddAgent()
         {
             var agentToAdd = new Agent()
@@ -98,6 +125,11 @@ namespace GUI_AgentAssignments
                                     agentToAdd.ID == agent.ID))
                 return;
             Agents.Add(agentToAdd);
+        }
+
+        private void RespondToAgentRequest()
+        {
+            _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Publish(Agents);
         }
         
 
