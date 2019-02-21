@@ -6,8 +6,9 @@
         xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:GUI_AgentAssignments"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="5"          >
+        Title="MainWindow" Height="450" Width="800"
+        Background="{Binding ThemesViewModel.BackgroundBrush, Converter={local:StringToRGBConverter}}">
+    <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -33,25 +34,43 @@
                 <MenuItem Header="Add New" Command="{Binding AgentViewModel.AddAgentCommand}"/>
                 <MenuItem Header="Delete" Command="{Binding AgentViewModel.DeleteAgentCommand}"/>
             </MenuItem>
+            <MenuItem Header="Color Themes">
+                <MenuItem Header="Yellow" 
+                          Command="{Binding ThemesViewModel.ChangeColorCommand}" 
+                          CommandParameter="FFFF00"/>
+                <MenuItem Header="Blue"
+                          Command="{Binding ThemesViewModel.ChangeColorCommand}" 
+                          CommandParameter="0000FF"/>
+                <MenuItem Header="Green"
+                          Command="{Binding ThemesViewModel.ChangeColorCommand}" 
+                          CommandParameter="00FF00"/>
+            </MenuItem>
         </Menu>
 
         <!--Toolbar-->
-        <ToolBarTray Grid.Row="1" Grid.ColumnSpan="2">
-            <ToolBar FontWeight="Bold" FontSize="20">
-                <Button Content="&lt;" 
-                        Command="{Binding AgentViewModel.PreviousAgentCommand}"/>
-                <Button Content="&gt;" 
-                        Command="{Binding AgentViewModel.NextAgentCommand}"/>
-                <Button Content="+" 
-                        Command="{Binding AgentViewModel.AddAgentCommand}"/>
-                <Button Content="-" 
-                        Command="{Binding AgentViewModel.DeleteAgentCommand}"/>
-
-            </ToolBar>
-        </ToolBarTray>
+        <ToolBar Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
+                 Background="{Binding ThemesViewModel.BackgroundBrush, Converter={local:StringToRGBConverter}}">
+            <Button Style="{StaticResource ImageButton}"
+                    local:ButtonAttachedProperties.Image="Images/less_than.png"
+                    Command="{Binding AgentViewModel.PreviousAgentCommand}"/>
+            <Button Style="{StaticResource ImageButton}"
+                    local:ButtonAttachedProperties.Image="Images/greater_than.png"
+                    Command="{Binding AgentViewModel.NextAgentCommand}"/>
+            <Button Style="{StaticResource ImageButton}"
+                    local:ButtonAttachedProperties.Image="Images/plus_sign.png" 
+                    Command="{Binding AgentViewModel.AddAgentCommand}"/>
+            <Button Style="{StaticResource ImageButton}"
+                    local:ButtonAttachedProperties.Image="Images/minus_sign.png"
+                    Command="{Binding AgentViewModel.DeleteAgentCommand}"/>
+            <Label Content="File _Name:" 
+                   Target="{Binding ElementName=FileNameTb}" />
+            <TextBox Name="FileNameTb" 
+                     Width="200"
+                     Text="{Binding FileHeaderViewModel.FileName, UpdateSourceTrigger=PropertyChanged}"/>
+        </ToolBar>
 
         <!--Agent Information-->
-        <Grid Grid.Row="2" Grid.Column="0" >
+        <Grid Grid.Row="2" Grid.Column="0" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="2*"/>
@@ -109,6 +128,7 @@
                   Grid.Row="2"
                   Name="AgentLv"
                   Grid.RowSpan="2"
+                  Margin="10"
                   ItemsSource="{Binding AgentViewModel.Agents}"
                   SelectedIndex="{Binding AgentViewModel.SelectedIndex}"
                   SelectedItem="{Binding AgentViewModel.CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">

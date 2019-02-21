@@ -17,9 +17,11 @@ namespace GUI_AgentAssignments
 {
 
     public class RequestAgentsListEvent : PubSubEvent { }
+    public class UpdateAgentsListsEvent : PubSubEvent<Agents> { }
     public class AgentViewModel : INotifyPropertyChanged
     {
         private Agent _currentAgent;
+        private Agents _agents;
         private int _selectedIndex = -1;
         private ICommand _previousAgentCommand;
         private ICommand _nextAgentCommand;
@@ -31,11 +33,12 @@ namespace GUI_AgentAssignments
         {
             _eventAggregator = ea;
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentRequest);
+            _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Subscribe((Agents a) => Agents = a);
             CurrentAgent = new Agent();
             Agents = new Agents()
             {
                 new Agent("007","James Bond","License to kill","Kill Bad Guy"),
-                new Agent("001","Nina","Looks","Charm Bad Guy")
+                new Agent("001","Anna Banana","Looks","Charm Bad Guy")
             };
         }
 
@@ -50,7 +53,18 @@ namespace GUI_AgentAssignments
                 OnPropertyChanged(nameof(CurrentAgent));
             }
         }
-        public Agents Agents { get; set; }
+
+        public Agents Agents
+        {
+            get => _agents;
+            set
+            {
+                if (_agents == value)
+                    return;
+                _agents = value ?? new Agents();
+                OnPropertyChanged(nameof(Agents));
+            }
+        }
 
         public int SelectedIndex
         {
@@ -91,7 +105,7 @@ namespace GUI_AgentAssignments
 
         private void DeleteAgent()
         {
-            if (SelectedIndex < 0)
+            if (SelectedIndex < 0 || SelectedIndex > Agents.Count)
                 return;
             Agents.RemoveAt(SelectedIndex);
         }

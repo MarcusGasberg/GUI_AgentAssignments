@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using GUI_AgentAssignments.Annotations;
 using Prism.Commands;
@@ -20,7 +22,7 @@ namespace GUI_AgentAssignments
 
     public class FileHeaderViewModel : INotifyPropertyChanged
     {
-        private string _fileName = "Test1";
+        private string _fileName = "Test2";
         private ICommand _exitCommand;
         private ICommand _newFileCommand;
         private ICommand _openFileCommand;
@@ -31,10 +33,10 @@ namespace GUI_AgentAssignments
         public FileHeaderViewModel(IEventAggregator ea)
         {
             _eventAggregator = ea;
-            _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Subscribe(CreateNewAgentsFile);
+            _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Subscribe((a)=>AgentsList = a);
         }
 
-        public AgentViewModel AgentViewModel { get; set; }
+        public Agents AgentsList { get; set; } = new Agents();
 
         public string FileName
         {
@@ -48,14 +50,13 @@ namespace GUI_AgentAssignments
             }
         }
 
-        public ICommand NewFileCommand
-        {
-            get => _newFileCommand ?? new DelegateCommand(()=>_eventAggregator.GetEvent<RequestAgentsListEvent>().Publish());
-        }
+        public ICommand NewFileCommand => _newFileCommand ?? new DelegateCommand(CreateNewAgentsFile);
 
-        public ICommand OpenFileCommand { get;}
-        public ICommand SaveFileCommand { get; }
-        public ICommand SaveFileAsCommand { get; }
+        public ICommand OpenFileCommand => _openFileCommand?? new DelegateCommand(OpenAgentFile);
+        public ICommand SaveFileCommand => _saveFileCommand ?? new DelegateCommand(SaveFile);
+
+
+        public ICommand SaveFileAsCommand => _saveFileAsCommand ?? new DelegateCommand(SaveFileAs);
 
         public ICommand ExitAppCommand
         {
@@ -64,18 +65,54 @@ namespace GUI_AgentAssignments
                        () => Application.Current != null && Application.Current.MainWindow != null);
             private set => _exitCommand = value;
         }
-
-        public void CreateNewAgentsFile(Agents agents)
+        private void SaveFileAs()
         {
+            throw new NotImplementedException();
+        }
+
+        private void SaveFile()
+        {
+            throw new NotImplementedException();
+        }
+        public void CreateNewAgentsFile()
+        {
+            _eventAggregator.GetEvent<RequestAgentsListEvent>().Publish();
             XmlSerializer xmlSer = new XmlSerializer(typeof(Agents));
             string path = "../../" + FileName; //Set file name to this folder
-            if(File.Exists(path))
-                throw new ApplicationException("File already exists");
-            using (StreamWriter sw = File.CreateText(path))
+            try
             {
-                xmlSer.Serialize(sw, agents);
+                if (File.Exists(path))
+                    throw new ApplicationException("File already exists");
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    xmlSer.Serialize(sw, AgentsList);
+                }
+                MessageBox.Show($"Created File {FileName} Successfully!");
             }
-            MessageBox.Show($"Created File {FileName} Successfully!");
+            catch (ApplicationException e)
+            {
+                MessageBox.Show($"{e.Message}");
+            }
+        }
+
+        public void OpenAgentFile()
+        {
+            try
+            {
+                string path = "../../" + FileName;
+                if (!File.Exists(path))
+                    throw new ApplicationException("No such file exists");
+                using (FileStream fs = new FileStream(path,FileMode.Open))
+                {
+                    var xmlSerializer = new XmlSerializer(typeof(Agents));
+                    AgentsList = (Agents) xmlSerializer.Deserialize(fs);
+                    _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Publish(AgentsList);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
