@@ -122,5 +122,8 @@
     <Resource Include="Images\greater_than.png" />
     <Resource Include="Images\less_than.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Files\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

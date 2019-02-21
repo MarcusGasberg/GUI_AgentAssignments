@@ -22,13 +22,13 @@ namespace GUI_AgentAssignments
 
     public class FileHeaderViewModel : INotifyPropertyChanged
     {
-        private string _fileName = "Test2";
+        private string _filePath = "../../Test";
         private ICommand _exitCommand;
         private ICommand _newFileCommand;
         private ICommand _openFileCommand;
         private ICommand _saveFileCommand;
         private ICommand _saveFileAsCommand;
-        private IEventAggregator _eventAggregator;
+        private readonly IEventAggregator _eventAggregator;
 
         public FileHeaderViewModel(IEventAggregator ea)
         {
@@ -38,15 +38,15 @@ namespace GUI_AgentAssignments
 
         public Agents AgentsList { get; set; } = new Agents();
 
-        public string FileName
+        public string FilePath
         {
-            get => _fileName;
+            get => _filePath;
             set
             {
-                if (_fileName == value)
+                if (_filePath == value)
                     return;
-                _fileName = value;
-                OnPropertyChanged(nameof(FileName));
+                _filePath = value;
+                OnPropertyChanged(nameof(FilePath));
             }
         }
 
@@ -67,27 +67,67 @@ namespace GUI_AgentAssignments
         }
         private void SaveFileAs()
         {
-            throw new NotImplementedException();
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = FilePath; // Default file name
+            dlg.DefaultExt = ".text"; // Default file extension
+            dlg.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
+
+            // Show save file dialog box
+            bool? result = dlg.ShowDialog();
+
+            // Process save file dialog box results
+            if (result != true)
+                return;
+
+            _eventAggregator.GetEvent<RequestAgentsListEvent>().Publish(); //Request Agents to save to xml file
+            FilePath = dlg.FileName;
+            try
+            {
+                XmlSerializer xmlSer = new XmlSerializer(typeof(Agents));
+                using (StreamWriter fs = new StreamWriter(FilePath))
+                {
+                    xmlSer.Serialize(fs, AgentsList);
+                }
+            }
+            catch (ApplicationException e)
+            {
+                MessageBox.Show($"{e.Message}");
+            }
         }
 
         private void SaveFile()
         {
-            throw new NotImplementedException();
+            _eventAggregator.GetEvent<RequestAgentsListEvent>().Publish(); //Request Agents to save to xml file
+            
+            try
+            {
+                XmlSerializer xmlSer = new XmlSerializer(typeof(Agents));
+                if (!File.Exists(FilePath))
+                    throw new ApplicationException("No such file exists");
+                using (StreamWriter fs = new StreamWriter(FilePath))
+                {
+                    xmlSer.Serialize(fs, AgentsList);
+                }
+                MessageBox.Show($"Saved File {FilePath} Successfully!");
+            }
+            catch (ApplicationException e)
+            {
+                MessageBox.Show($"{e.Message}");
+            }
         }
         public void CreateNewAgentsFile()
         {
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Publish();
             XmlSerializer xmlSer = new XmlSerializer(typeof(Agents));
-            string path = "../../" + FileName; //Set file name to this folder
             try
             {
-                if (File.Exists(path))
+                if (File.Exists(FilePath))
                     throw new ApplicationException("File already exists");
-                using (StreamWriter sw = File.CreateText(path))
+                using (StreamWriter sw = File.CreateText(FilePath))
                 {
                     xmlSer.Serialize(sw, AgentsList);
                 }
-                MessageBox.Show($"Created File {FileName} Successfully!");
+                MessageBox.Show($"Created File {FilePath} Successfully!");
             }
             catch (ApplicationException e)
             {
@@ -97,15 +137,27 @@ namespace GUI_AgentAssignments
 
         public void OpenAgentFile()
         {
+
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.FileName = FilePath; // Default file name
+            dlg.DefaultExt = ".text"; // Default file extension
+            dlg.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
+
+            // Show save file dialog box
+            bool? result = dlg.ShowDialog();
+
+            // Process save file dialog box results
+            if (result != true)
+                return;
+
+            FilePath = dlg.FileName;
             try
             {
-                string path = "../../" + FileName;
-                if (!File.Exists(path))
-                    throw new ApplicationException("No such file exists");
-                using (FileStream fs = new FileStream(path,FileMode.Open))
+                XmlSerializer xmlSer = new XmlSerializer(typeof(Agents));
+                using (FileStream fs = new FileStream(FilePath, FileMode.Open))
                 {
                     var xmlSerializer = new XmlSerializer(typeof(Agents));
-                    AgentsList = (Agents) xmlSerializer.Deserialize(fs);
+                    AgentsList = (Agents)xmlSerializer.Deserialize(fs);
                     _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Publish(AgentsList);
                 }
             }

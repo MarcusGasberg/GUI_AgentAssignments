@@ -11,5 +11,16 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Background" Value="WhiteSmoke"/>
         <Setter Property="Foreground" Value="Black"/>
+        <Style.Triggers>
+            <Trigger Property="Text" Value="007">
+                <Setter Property="Background" Value="Gold"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type Label}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="Comic Sans"/>
+        <Setter Property="Foreground" Value="Black"/>
     </Style>
 </ResourceDictionary>
