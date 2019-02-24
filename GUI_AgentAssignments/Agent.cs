@@ -30,12 +30,11 @@ namespace GUI_AgentAssignments
 
       public string ID
       {
-         get
-         {
-            return _id;
-         }
+         get => _id;
          set
          {
+             if (_id == value)
+                 return;
             _id = value;
             OnPropertyChanged(nameof(ID));
          }
@@ -43,12 +42,11 @@ namespace GUI_AgentAssignments
 
       public string CodeName
       {
-         get
-         {
-            return _codeName;
-         }
+         get => _codeName;
          set
          {
+             if (_codeName == value)
+                return;
             _codeName = value;
             OnPropertyChanged(nameof(CodeName));
          }
@@ -56,12 +54,11 @@ namespace GUI_AgentAssignments
 
       public string Speciality
       {
-         get
-         {
-            return _speciality;
-         }
+         get => _speciality;
          set
          {
+             if (_speciality == value)
+                 return;
             _speciality = value;
             OnPropertyChanged(nameof(Speciality));
          }
@@ -69,12 +66,11 @@ namespace GUI_AgentAssignments
 
       public string Assignment
       {
-         get
-         {
-            return _assignment;
-         }
+         get => _assignment;
          set
          {
+             if (_assignment == value)
+                 return;
             _assignment = value;
             OnPropertyChanged(nameof(Assignment));
          }
