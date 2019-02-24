@@ -71,10 +71,11 @@
             <Button Style="{StaticResource ImageButton}"
                     local:ButtonAttachedProperties.Image="Images/minus_sign.png"
                     Command="{Binding AgentViewModel.DeleteAgentCommand}"/>
-            <Label Content="File _Name:" 
+            <Label Content="File _Name:"
                    Target="{Binding ElementName=FileNameTb}" />
             <TextBox Name="FileNameTb" 
                      Width="200"
+                     Style="{StaticResource FileNameStyle}"
                      Text="{Binding FileHeaderViewModel.FileName, UpdateSourceTrigger=PropertyChanged}"/>
         </ToolBar>
 
@@ -85,6 +86,7 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -102,19 +104,23 @@
 
             <TextBox Grid.Row="0" 
                      Grid.Column="1" 
-                     Text="{Binding AgentViewModel.CurrentAgent.ID}"/>
+                     Text="{Binding AgentViewModel.CurrentAgent.ID}"
+                     Style="{StaticResource JamesBondTextBox}"/>
             <TextBox Grid.Row="1" 
                      Grid.Column="1" 
-                     Text="{Binding AgentViewModel.CurrentAgent.CodeName}"/>
+                     Text="{Binding AgentViewModel.CurrentAgent.CodeName}"
+                     Style="{StaticResource JamesBondTextBox}"/>
             <TextBox Grid.Row="2" 
                      Grid.Column="1" 
-                     Text="{Binding AgentViewModel.CurrentAgent.Speciality}"/>
+                     Text="{Binding AgentViewModel.CurrentAgent.Speciality}"
+                     Style="{StaticResource JamesBondTextBox}"/>
             <TextBox Grid.Row="3" 
                      Grid.Column="1"
                      VerticalAlignment="Top"
                      Text="{Binding AgentViewModel.CurrentAgent.Assignment}" 
                      AcceptsReturn="True" 
-                     Height="80"/>
+                     Height="100"
+                     Style="{StaticResource JamesBondTextBox}"/>
             
         </Grid>
 
