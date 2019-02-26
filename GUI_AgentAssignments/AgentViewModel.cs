@@ -60,6 +60,8 @@ namespace GUI_AgentAssignments
             };
         }
 
+        public ObservableCollection<string> SpecialityList { get; set; }
+
         private void ResetAgents()
         {
             SelectedIndex = -1;
