@@ -11,6 +11,28 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Background" Value="WhiteSmoke"/>
         <Setter Property="Foreground" Value="Black"/>
+    </Style>
+
+
+    <Style x:Key="FileNameStyle" TargetType="{x:Type TextBox}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="0 5 0 5"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="WhiteSmoke"/>
+        <Setter Property="Foreground" Value="Black"/>
+    </Style>
+
+    <Style x:Key="JamesBondTextBox"  TargetType="{x:Type TextBox}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="Comic Sans"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Margin" Value="0 5 0 5"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="WhiteSmoke"/>
+        <Setter Property="Foreground" Value="Black"/>
         <Style.Triggers>
             <Trigger Property="Text" Value="007">
                 <Setter Property="Background" Value="Gold"/>
@@ -18,9 +40,13 @@
         </Style.Triggers>
     </Style>
 
+
     <Style TargetType="{x:Type Label}">
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontStyle" Value="Italic"/>
         <Setter Property="FontFamily" Value="Comic Sans"/>
         <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 </ResourceDictionary>

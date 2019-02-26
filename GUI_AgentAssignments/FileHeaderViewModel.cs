@@ -68,7 +68,7 @@ namespace GUI_AgentAssignments
         private void SaveFileAs()
         {
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.FileName = FilePath; // Default file name
+            dlg.FileName = FilePath.Substring(FilePath.LastIndexOf('/') + 1); // Default file name
             dlg.DefaultExt = ".text"; // Default file extension
             dlg.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
 
@@ -117,29 +117,16 @@ namespace GUI_AgentAssignments
         }
         public void CreateNewAgentsFile()
         {
-            _eventAggregator.GetEvent<RequestAgentsListEvent>().Publish();
-            XmlSerializer xmlSer = new XmlSerializer(typeof(Agents));
-            try
-            {
-                if (File.Exists(FilePath))
-                    throw new ApplicationException("File already exists");
-                using (StreamWriter sw = File.CreateText(FilePath))
-                {
-                    xmlSer.Serialize(sw, AgentsList);
-                }
-                MessageBox.Show($"Created File {FilePath} Successfully!");
-            }
-            catch (ApplicationException e)
-            {
-                MessageBox.Show($"{e.Message}");
-            }
+            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Are you sure you want to override this file?", "New File Confirmation", System.Windows.MessageBoxButton.YesNo);
+            if (messageBoxResult == MessageBoxResult.Yes)
+                _eventAggregator.GetEvent<ResetAgentsEvent>().Publish();
         }
 
         public void OpenAgentFile()
         {
 
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.FileName = FilePath; // Default file name
+            dlg.FileName = FilePath.Substring(FilePath.LastIndexOf('/') + 1); ; // Default file name
             dlg.DefaultExt = ".text"; // Default file extension
             dlg.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
 

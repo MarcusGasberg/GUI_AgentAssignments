@@ -19,6 +19,8 @@ namespace GUI_AgentAssignments
 
     public class RequestAgentsListEvent : PubSubEvent { }
     public class UpdateAgentsListsEvent : PubSubEvent<Agents> { }
+    public class ResetAgentsEvent : PubSubEvent { }
+
     public class AgentViewModel : INotifyPropertyChanged
     {
         private Agent _currentAgent;
@@ -37,6 +39,7 @@ namespace GUI_AgentAssignments
             _eventAggregator = ea;
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentRequest);
             _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Subscribe((Agents a) => Agents = a);
+            _eventAggregator.GetEvent<ResetAgentsEvent>().Subscribe(ResetAgents);
             CurrentAgent = new Agent();
 
             Agents = new Agents()
@@ -57,7 +60,12 @@ namespace GUI_AgentAssignments
             };
         }
 
-        public ObservableCollection<string> SpecialityList { get; set; }
+        private void ResetAgents()
+        {
+            SelectedIndex = -1;
+            CurrentAgent = new Agent();
+            Agents.Clear();
+        }
 
         public Agent CurrentAgent
         {
