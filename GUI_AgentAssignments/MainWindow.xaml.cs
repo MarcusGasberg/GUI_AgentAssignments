@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Prism.Events;
 
 namespace GUI_AgentAssignments
@@ -21,13 +22,19 @@ namespace GUI_AgentAssignments
     /// </summary>
     public partial class MainWindow : Window
     {
+        private DispatcherTimer _dispatcherTimer;
         public AgentViewModel AgentViewModel { get; set; }
         public FileHeaderViewModel FileHeaderViewModel { get; set; }
         public EventAggregator EventAggregator { get; set; }
         public ThemesViewModel ThemesViewModel { get; set; }
+        public string ApplicationTime { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += (s,e) => ApplicationTime = DateTime.Now.ToLongTimeString();
+            _dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
+            _dispatcherTimer.Start();
             EventAggregator = new EventAggregator();
             AgentViewModel = new AgentViewModel(EventAggregator);
             FileHeaderViewModel = new FileHeaderViewModel(EventAggregator);

@@ -80,6 +80,14 @@ namespace GUI_AgentAssignments
          }
       }
 
+      public override bool Equals(object obj)
+      {
+          var compareTo = (obj as Agent);
+          if (compareTo == null)
+            return false;
+          return CodeName == compareTo.CodeName && ID == compareTo.ID;
+      }
+
       public event PropertyChangedEventHandler PropertyChanged;
 
       [NotifyPropertyChangedInvocator]

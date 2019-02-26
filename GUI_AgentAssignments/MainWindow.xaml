@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:GUI_AgentAssignments"
         mc:Ignorable="d"
@@ -17,6 +18,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
         <!--Header Menu-->
@@ -74,8 +76,33 @@
             <Label Content="File _Name:" 
                    Target="{Binding ElementName=FileNameTb}" />
             <TextBox Name="FileNameTb" 
-                     Width="200"
+                     Width="120"
                      Text="{Binding FileHeaderViewModel.FileName, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Content="Sort Order"/>
+            <ComboBox Width="120" >
+                <ComboBoxItem Content="None"/>
+                <ComboBoxItem Content="ID"/>
+                <ComboBoxItem Content="CodeName"/>
+                <ComboBoxItem Content="Speciality"/>
+                <ComboBoxItem Content="Assignment"/>
+                
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding AgentViewModel.SortAgentsCommand}" 
+                                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectedValue}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            <Label Content="Speciality"/>
+            <ComboBox Width="100" ItemsSource="{Binding Path=AgentViewModel.SpecialityList}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding AgentViewModel.FilterSpecialityCommand}" 
+                                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectedValue}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+
         </ToolBar>
 
         <!--Agent Information-->
@@ -106,9 +133,11 @@
             <TextBox Grid.Row="1" 
                      Grid.Column="1" 
                      Text="{Binding AgentViewModel.CurrentAgent.CodeName}"/>
-            <TextBox Grid.Row="2" 
+            <ComboBox Grid.Row="2" 
                      Grid.Column="1" 
-                     Text="{Binding AgentViewModel.CurrentAgent.Speciality}"/>
+                     ItemsSource="{Binding Path=AgentViewModel.SpecialityList}"
+                     SelectedValue="{Binding Path=AgentViewModel.CurrentAgent.Speciality}"
+                     />
             <TextBox Grid.Row="3" 
                      Grid.Column="1"
                      VerticalAlignment="Top"
@@ -128,16 +157,43 @@
                   SelectedIndex="{Binding AgentViewModel.SelectedIndex}"
                   SelectedItem="{Binding AgentViewModel.CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <WrapPanel>
-                        <TextBlock Text="{Binding ID}"/>
-                        <TextBlock Text=", "/>
-                        <TextBlock Text="{Binding CodeName}"/>
-                    </WrapPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:Agent}">
+                    <!--Maybe convert into wrap panel-->
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0}&#x09;{1}&#x09;{2}&#x09;{3}">
+                                <Binding Path="ID"/>
+                                <Binding Path="CodeName"/>
+                                <Binding Path="Speciality"/>
+                                <Binding Path="Assignment"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Converter={local:AgentToBooleanConverter}}"
+                                     Value="True"
+                        >
+                            <Setter Property="TextBlock.Foreground" Value="Blue"/>
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
-            </ListView.ItemTemplate>
+                
+            </ListBox.ItemTemplate>
+
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Style.Triggers>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListView>
 
+        <StatusBar Grid.Row="3" Grid.ColumnSpan="2">
+            <WrapPanel>
+                <TextBlock Text="{Binding AgentViewModel.Agents.Count, StringFormat=Agent Amount: {0}}"/>
+                <TextBlock Text="{Binding ApplicationTime}"/>
+            </WrapPanel>
+        </StatusBar>
     </Grid>
 </Window>

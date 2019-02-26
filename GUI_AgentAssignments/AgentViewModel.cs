@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using GUI_AgentAssignments.Annotations;
 using Prism.Commands;
@@ -27,6 +28,8 @@ namespace GUI_AgentAssignments
         private ICommand _nextAgentCommand;
         private ICommand _addAgentCommand;
         private ICommand _deleteAgentCommand;
+        private ICommand _sortAgentsCommand;
+        private ICommand _filterSpecialityCommand;
         private IEventAggregator _eventAggregator;
 
         public AgentViewModel(IEventAggregator ea)
@@ -35,12 +38,26 @@ namespace GUI_AgentAssignments
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentRequest);
             _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Subscribe((Agents a) => Agents = a);
             CurrentAgent = new Agent();
+
             Agents = new Agents()
             {
                 new Agent("007","James Bond","License to kill","Kill Bad Guy"),
-                new Agent("001","Anna Banana","Looks","Charm Bad Guy")
+                new Agent("001","Anna Banana","Seduction","Charm Bad Guy")
+            };
+
+            SpecialityList = new ObservableCollection<string>()
+            {
+                "Assasination",
+                "License to kill",
+                "Bombs",
+                "Low Profile",
+                "Seduction",
+                "Spy",
+                "Martinis"
             };
         }
+
+        public ObservableCollection<string> SpecialityList { get; set; }
 
         public Agent CurrentAgent
         {
@@ -78,11 +95,42 @@ namespace GUI_AgentAssignments
             }
         }
 
+        public ICommand FilterSpecialityCommand
+        {
+            get => _filterSpecialityCommand ?? new DelegateCommand<string>(FilterSpeciality);
+            set => _filterSpecialityCommand = value;
+        }
+
+        private void FilterSpeciality(string s)
+        {
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
+            collectionView.Filter = new Predicate<object>( o => (o as Agent)?.Speciality == s);
+        }
+
+        public ICommand SortAgentsCommand
+        {
+            get => _sortAgentsCommand?? new DelegateCommand<object>(SortAgents);
+            set => _sortAgentsCommand = value;
+        }
+
+        private void SortAgents(object s)
+        {
+            var sortingFor = (s as ComboBoxItem)?.Content.ToString();
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
+            collectionView?.SortDescriptions.Clear();
+            if (sortingFor != "None")
+            {
+                var sortDesc = new SortDescription(sortingFor, ListSortDirection.Ascending);
+                collectionView?.SortDescriptions.Add(sortDesc);
+            }
+        }
+
         public ICommand PreviousAgentCommand
         {
             get => _previousAgentCommand?? new DelegateCommand(PreviousAgent);
             private set => _previousAgentCommand = value;
         }
+
 
         public ICommand NextAgentCommand
         {
