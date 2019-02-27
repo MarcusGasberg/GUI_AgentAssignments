@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -22,19 +23,30 @@ namespace GUI_AgentAssignments
 
     public class FileHeaderViewModel : INotifyPropertyChanged
     {
+        #region Private Fields
         private string _filePath = "../../Test";
         private ICommand _exitCommand;
         private ICommand _newFileCommand;
         private ICommand _openFileCommand;
         private ICommand _saveFileCommand;
         private ICommand _saveFileAsCommand;
-        private readonly IEventAggregator _eventAggregator;
+        private DispatcherTimer _dispatcherTimer;
+        private string _applicationTime;
+        private readonly IEventAggregator _eventAggregator; 
 
+        #endregion
+        #region Constructors
         public FileHeaderViewModel(IEventAggregator ea)
         {
             _eventAggregator = ea;
-            _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Subscribe((a)=>AgentsList = a);
-        }
+            _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Subscribe((a) => AgentsList = a);
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += (s, e) => ApplicationTime = DateTime.Now.ToLongTimeString();
+            _dispatcherTimer.Interval = TimeSpan.FromSeconds(1);
+            _dispatcherTimer.Start();
+        } 
+        #endregion
+        #region Properties
 
         public Agents AgentsList { get; set; } = new Agents();
 
@@ -50,9 +62,23 @@ namespace GUI_AgentAssignments
             }
         }
 
+        public string ApplicationTime
+        {
+            get => _applicationTime;
+            set
+            {
+                if (_applicationTime == value)
+                    return;
+                _applicationTime = value;
+                OnPropertyChanged(nameof(ApplicationTime));
+            }
+        }
+        #endregion
+        #region Commands
+
         public ICommand NewFileCommand => _newFileCommand ?? new DelegateCommand(CreateNewAgentsFile);
 
-        public ICommand OpenFileCommand => _openFileCommand?? new DelegateCommand(OpenAgentFile);
+        public ICommand OpenFileCommand => _openFileCommand ?? new DelegateCommand(OpenAgentFile);
         public ICommand SaveFileCommand => _saveFileCommand ?? new DelegateCommand(SaveFile);
 
 
@@ -65,6 +91,9 @@ namespace GUI_AgentAssignments
                        () => Application.Current != null && Application.Current.MainWindow != null);
             private set => _exitCommand = value;
         }
+        #endregion
+        #region Private Helper Function
+
         private void SaveFileAs()
         {
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
@@ -98,7 +127,7 @@ namespace GUI_AgentAssignments
         private void SaveFile()
         {
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Publish(); //Request Agents to save to xml file
-            
+
             try
             {
                 XmlSerializer xmlSer = new XmlSerializer(typeof(Agents));
@@ -153,6 +182,8 @@ namespace GUI_AgentAssignments
                 MessageBox.Show(e.Message);
             }
         }
+        #endregion
+        #region Property Changed
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -160,6 +191,7 @@ namespace GUI_AgentAssignments
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        } 
+        #endregion
     }
 }

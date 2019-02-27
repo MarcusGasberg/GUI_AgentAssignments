@@ -157,7 +157,7 @@
                   SelectedIndex="{Binding AgentViewModel.SelectedIndex}"
                   SelectedItem="{Binding AgentViewModel.CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
-            <ListBox.ItemTemplate>
+            <ListView.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:Agent}">
                     <!--Maybe convert into container-->
                     <TextBlock>
@@ -177,14 +177,16 @@
                         </DataTrigger>
                     </DataTemplate.Triggers>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
+            </ListView.ItemTemplate>
         </ListView>
 
         <StatusBar Grid.Row="3" Grid.ColumnSpan="2">
-            <WrapPanel>
+            <StatusBarItem>
                 <TextBlock Text="{Binding AgentViewModel.Agents.Count, StringFormat=Agent Amount: {0}}"/>
-                <TextBlock Text="{Binding ApplicationTime}"/>
-            </WrapPanel>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="{Binding FileHeaderViewModel.ApplicationTime}"/>
+            </StatusBarItem>
         </StatusBar>
     </Grid>
 </Window>

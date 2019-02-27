@@ -58,6 +58,7 @@ namespace GUI_AgentAssignments
 
         public ObservableCollection<string> SpecialityList { get; set; } = new ObservableCollection<string>()
         {
+            "None",
             "Assassination",
             "License to kill",
             "Bombs",
@@ -123,7 +124,14 @@ namespace GUI_AgentAssignments
         private void FilterSpeciality(string s)
         {
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
-            collectionView.Filter = new Predicate<object>(o => (o as Agent)?.Speciality == s);
+            if (s == "None")
+            {
+                collectionView.Filter = null;
+            }
+            else
+            {
+                collectionView.Filter = o => (o as Agent)?.Speciality == s;
+            }
         }
 
         public ICommand SortAgentsCommand
