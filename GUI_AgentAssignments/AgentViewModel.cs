@@ -23,6 +23,8 @@ namespace GUI_AgentAssignments
 
     public class AgentViewModel : INotifyPropertyChanged
     {
+        #region Private Fields
+
         private Agent _currentAgent;
         private Agents _agents;
         private int _selectedIndex = -1;
@@ -34,6 +36,8 @@ namespace GUI_AgentAssignments
         private ICommand _filterSpecialityCommand;
         private IEventAggregator _eventAggregator;
 
+        #endregion
+        #region Default Constructor
         public AgentViewModel(IEventAggregator ea)
         {
             _eventAggregator = ea;
@@ -47,36 +51,30 @@ namespace GUI_AgentAssignments
                 new Agent("007","James Bond","License to kill","Kill Bad Guy"),
                 new Agent("001","Anna Banana","Seduction","Charm Bad Guy")
             };
-
-            SpecialityList = new ObservableCollection<string>()
-            {
-                "Assassination",
-                "License to kill",
-                "Bombs",
-                "Low Profile",
-                "Seduction",
-                "Spy",
-                "Martinis"
-            };
-            SortOrderList = new ObservableCollection<string>()
-            {
-                "None",
-                "ID",
-                "CodeName",
-                "Speciality",
-                "Assignment"
-            };
+            
         }
+        #endregion
+        #region Properties
 
-        public ObservableCollection<string> SpecialityList { get; set; }
-        public ObservableCollection<string> SortOrderList { get; set; }
-
-        private void ResetAgents()
+        public ObservableCollection<string> SpecialityList { get; set; } = new ObservableCollection<string>()
         {
-            SelectedIndex = -1;
-            CurrentAgent = new Agent();
-            Agents.Clear();
-        }
+            "Assassination",
+            "License to kill",
+            "Bombs",
+            "Low Profile",
+            "Seduction",
+            "Spy",
+            "Martinis"
+        };
+        public ObservableCollection<string> SortOrderList { get; set; } = new ObservableCollection<string>()
+        {
+            "None",
+            "ID",
+            "CodeName",
+            "Speciality",
+            "Assignment"
+        };
+
 
         public Agent CurrentAgent
         {
@@ -109,11 +107,13 @@ namespace GUI_AgentAssignments
             {
                 if (_selectedIndex == value)
                     return;
-                _selectedIndex = value >= -1 && value < Agents.Count ? value : -1 ;
+                _selectedIndex = value >= -1 && value < Agents.Count ? value : -1;
                 OnPropertyChanged(nameof(SelectedIndex));
             }
         }
 
+        #endregion
+        #region Commands
         public ICommand FilterSpecialityCommand
         {
             get => _filterSpecialityCommand ?? new DelegateCommand<string>(FilterSpeciality);
@@ -123,15 +123,41 @@ namespace GUI_AgentAssignments
         private void FilterSpeciality(string s)
         {
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
-            collectionView.Filter = new Predicate<object>( o => (o as Agent)?.Speciality == s);
+            collectionView.Filter = new Predicate<object>(o => (o as Agent)?.Speciality == s);
         }
 
         public ICommand SortAgentsCommand
         {
-            get => _sortAgentsCommand?? new DelegateCommand<string>(SortAgents);
+            get => _sortAgentsCommand ?? new DelegateCommand<string>(SortAgents);
             set => _sortAgentsCommand = value;
         }
 
+        public ICommand PreviousAgentCommand
+        {
+            get => _previousAgentCommand ?? new DelegateCommand(PreviousAgent);
+            private set => _previousAgentCommand = value;
+        }
+
+
+        public ICommand NextAgentCommand
+        {
+            get => _nextAgentCommand ?? new DelegateCommand(NextAgent);
+            private set => _nextAgentCommand = value;
+        }
+
+        public ICommand AddAgentCommand
+        {
+            get => _addAgentCommand ?? new DelegateCommand(AddAgent);
+            private set => _addAgentCommand = value;
+        }
+
+        public ICommand DeleteAgentCommand
+        {
+            get => _deleteAgentCommand ?? new DelegateCommand(DeleteAgent);
+            private set => _deleteAgentCommand = value;
+        }
+        #endregion
+        #region Private Helpers for Commands
         private void SortAgents(string s)
         {
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
@@ -143,37 +169,18 @@ namespace GUI_AgentAssignments
             }
         }
 
-        public ICommand PreviousAgentCommand
-        {
-            get => _previousAgentCommand?? new DelegateCommand(PreviousAgent);
-            private set => _previousAgentCommand = value;
-        }
-
-
-        public ICommand NextAgentCommand
-        {
-            get => _nextAgentCommand?? new DelegateCommand(NextAgent);
-            private set => _nextAgentCommand = value;
-        }
-
-        public ICommand AddAgentCommand
-        {
-            get => _addAgentCommand?? new DelegateCommand(AddAgent);
-            private set => _addAgentCommand = value;
-        }
-
-        public ICommand DeleteAgentCommand
-        {
-            get => _deleteAgentCommand?? new DelegateCommand(DeleteAgent);
-            private set => _deleteAgentCommand = value;
-        }
-
-
         private void DeleteAgent()
         {
             if (SelectedIndex < 0 || SelectedIndex > Agents.Count)
                 return;
             Agents.RemoveAt(SelectedIndex);
+        }
+
+        private void ResetAgents()
+        {
+            SelectedIndex = -1;
+            CurrentAgent = new Agent();
+            Agents.Clear();
         }
 
         private void PreviousAgent()
@@ -196,10 +203,10 @@ namespace GUI_AgentAssignments
         {
             var agentToAdd = new Agent()
             {
-                ID = CurrentAgent.ID?? "0",
-                CodeName = CurrentAgent.CodeName?? "Unknown",
-                Speciality = CurrentAgent.Speciality?? "Unknown",
-                Assignment = CurrentAgent.Assignment?? "Unknown"
+                ID = CurrentAgent.ID ?? "0",
+                CodeName = CurrentAgent.CodeName ?? "Unknown",
+                Speciality = CurrentAgent.Speciality ?? "Unknown",
+                Assignment = CurrentAgent.Assignment ?? "Unknown"
             };
             if (Agents.Any(agent => agentToAdd.CodeName == agent.CodeName &&
                                     agentToAdd.ID == agent.ID))
@@ -211,7 +218,8 @@ namespace GUI_AgentAssignments
         {
             _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Publish(Agents);
         }
-        
+        #endregion
+        #region Property Changed
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -219,6 +227,7 @@ namespace GUI_AgentAssignments
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        } 
+        #endregion
     }
 }

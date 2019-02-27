@@ -159,7 +159,7 @@
 
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:Agent}">
-                    <!--Maybe convert into wrap panel-->
+                    <!--Maybe convert into container-->
                     <TextBlock>
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}{0}&#x09;{1}&#x09;{2}&#x09;{3}">
@@ -172,8 +172,7 @@
                     </TextBlock>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding Converter={local:AgentToBooleanConverter}}"
-                                     Value="True"
-                        >
+                                     Value="True">
                             <Setter Property="TextBlock.Foreground" Value="Blue"/>
                         </DataTrigger>
                     </DataTemplate.Triggers>

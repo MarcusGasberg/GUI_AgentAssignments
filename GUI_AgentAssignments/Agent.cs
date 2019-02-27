@@ -9,87 +9,95 @@ namespace GUI_AgentAssignments
     public class Agents : ObservableCollection<Agent> { };  // Just to reference it from xaml
 
     [Serializable]
-   public class Agent : INotifyPropertyChanged
-   {
-      string _id;
-      string _codeName;
-      string _speciality;
-      string _assignment;
+    public class Agent : INotifyPropertyChanged
+    {
+        #region Private Fields
 
-      public Agent()
-      {
-      }
+        string _id;
+        string _codeName;
+        string _speciality;
+        string _assignment;
 
-      public Agent(string aId, string aName, string aSpeciality, string aAssignment)
-      {
+        #endregion
+        #region Constructors
+        public Agent()
+        {
+        }
+        public Agent(string aId, string aName, string aSpeciality, string aAssignment)
+        {
          _id = aId;
          _codeName = aName;
          _speciality = aSpeciality;
          _assignment = aAssignment;
-      }
+        }
+        #endregion
+        #region Properties
 
-      public string ID
-      {
-         get => _id;
-         set
-         {
-             if (_id == value)
-                 return;
-            _id = value;
-            OnPropertyChanged(nameof(ID));
-         }
-      }
+        public string ID
+        {
+            get => _id;
+            set
+            {
+                if (_id == value)
+                    return;
+                _id = value;
+                OnPropertyChanged(nameof(ID));
+            }
+        }
 
-      public string CodeName
-      {
-         get => _codeName;
-         set
-         {
-             if (_codeName == value)
-                return;
-            _codeName = value;
-            OnPropertyChanged(nameof(CodeName));
-         }
-      }
+        public string CodeName
+        {
+            get => _codeName;
+            set
+            {
+                if (_codeName == value)
+                    return;
+                _codeName = value;
+                OnPropertyChanged(nameof(CodeName));
+            }
+        }
 
-      public string Speciality
-      {
-         get => _speciality;
-         set
-         {
-             if (_speciality == value)
-                 return;
-            _speciality = value;
-            OnPropertyChanged(nameof(Speciality));
-         }
-      }
+        public string Speciality
+        {
+            get => _speciality;
+            set
+            {
+                if (_speciality == value)
+                    return;
+                _speciality = value;
+                OnPropertyChanged(nameof(Speciality));
+            }
+        }
 
-      public string Assignment
-      {
-         get => _assignment;
-         set
-         {
-             if (_assignment == value)
-                 return;
-            _assignment = value;
-            OnPropertyChanged(nameof(Assignment));
-         }
-      }
+        public string Assignment
+        {
+            get => _assignment;
+            set
+            {
+                if (_assignment == value)
+                    return;
+                _assignment = value;
+                OnPropertyChanged(nameof(Assignment));
+            }
+        }
 
-      public override bool Equals(object obj)
-      {
-          var compareTo = (obj as Agent);
-          if (compareTo == null)
-            return false;
-          return CodeName == compareTo.CodeName && ID == compareTo.ID;
-      }
+        public override bool Equals(object obj)
+        {
+            var compareTo = (obj as Agent);
+            if (compareTo == null)
+                return false;
+            return CodeName == compareTo.CodeName && ID == compareTo.ID;
+        }
+        #endregion
+        #region Property Changed
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-      [NotifyPropertyChangedInvocator]
-      protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-      {
-          PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-      }
-   }
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        } 
+        #endregion
+    }
 }

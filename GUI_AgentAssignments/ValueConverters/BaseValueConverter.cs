@@ -24,38 +24,14 @@ namespace GUI_AgentAssignments
         #endregion
 
         #region Markup Extension Methods
-        /// <summary>
-        /// Provide a static instance of the value converter
-        /// </summary>
-        /// <param name="serviceProvider">The servie provider</param>
-        /// <returns></returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            //if (mConverter == null)
-            //mConverter = newT();
-            //return mConverter;
             return _converter ?? (_converter = new T());
         }
         #endregion
 
         #region Value Converter Methods
-        /// <summary>
-        /// The method to convert one type to another
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
         public abstract object Convert(object value, Type targetType, object parameter, CultureInfo culture);
-        /// <summary>
-        /// The method to convert a value back to its source type
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="targetType"></param>
-        /// <param name="parameter"></param>
-        /// <param name="culture"></param>
-        /// <returns></returns>
         public abstract object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture);
 
         #endregion
