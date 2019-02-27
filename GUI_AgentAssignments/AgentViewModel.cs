@@ -50,7 +50,7 @@ namespace GUI_AgentAssignments
 
             SpecialityList = new ObservableCollection<string>()
             {
-                "Assasination",
+                "Assassination",
                 "License to kill",
                 "Bombs",
                 "Low Profile",
@@ -58,9 +58,18 @@ namespace GUI_AgentAssignments
                 "Spy",
                 "Martinis"
             };
+            SortOrderList = new ObservableCollection<string>()
+            {
+                "None",
+                "ID",
+                "CodeName",
+                "Speciality",
+                "Assignment"
+            };
         }
 
         public ObservableCollection<string> SpecialityList { get; set; }
+        public ObservableCollection<string> SortOrderList { get; set; }
 
         private void ResetAgents()
         {
@@ -119,18 +128,17 @@ namespace GUI_AgentAssignments
 
         public ICommand SortAgentsCommand
         {
-            get => _sortAgentsCommand?? new DelegateCommand<object>(SortAgents);
+            get => _sortAgentsCommand?? new DelegateCommand<string>(SortAgents);
             set => _sortAgentsCommand = value;
         }
 
-        private void SortAgents(object s)
+        private void SortAgents(string s)
         {
-            var sortingFor = (s as ComboBoxItem)?.Content.ToString();
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
             collectionView?.SortDescriptions.Clear();
-            if (sortingFor != "None")
+            if (s != "None")
             {
-                var sortDesc = new SortDescription(sortingFor, ListSortDirection.Ascending);
+                var sortDesc = new SortDescription(s, ListSortDirection.Ascending);
                 collectionView?.SortDescriptions.Add(sortDesc);
             }
         }

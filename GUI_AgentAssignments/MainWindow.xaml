@@ -79,13 +79,10 @@
                      Width="120"
                      Text="{Binding FileHeaderViewModel.FileName, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Content="Sort Order"/>
-            <ComboBox Width="120" >
-                <ComboBoxItem Content="None"/>
-                <ComboBoxItem Content="ID"/>
-                <ComboBoxItem Content="CodeName"/>
-                <ComboBoxItem Content="Speciality"/>
-                <ComboBoxItem Content="Assignment"/>
-                
+            <ComboBox Width="120" 
+                      SelectedIndex="0"
+                      ItemsSource="{Binding AgentViewModel.SortOrderList}">
+
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding AgentViewModel.SortAgentsCommand}" 
@@ -181,15 +178,7 @@
                         </DataTrigger>
                     </DataTemplate.Triggers>
                 </DataTemplate>
-                
             </ListBox.ItemTemplate>
-
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Style.Triggers>
-                    </Style.Triggers>
-                </Style>
-            </ListBox.ItemContainerStyle>
         </ListView>
 
         <StatusBar Grid.Row="3" Grid.ColumnSpan="2">
