@@ -35,6 +35,7 @@ namespace GUI_AgentAssignments
         private ICommand _deleteAgentCommand;
         private ICommand _sortAgentsCommand;
         private ICommand _filterSpecialityCommand;
+        private ICommand _editAgentCommand;
         private IEventAggregator _eventAggregator;
 
         #endregion
@@ -58,17 +59,6 @@ namespace GUI_AgentAssignments
         #endregion
         #region Properties
 
-        public ObservableCollection<string> SpecialityList { get; set; } = new ObservableCollection<string>()
-        {
-            "None",
-            "Assassination",
-            "License to kill",
-            "Bombs",
-            "Low Profile",
-            "Seduction",
-            "Spy",
-            "Martinis"
-        };
 
 
         public Agent CurrentAgent
@@ -126,6 +116,18 @@ namespace GUI_AgentAssignments
             {
                 collectionView.Filter = o => (o as Agent)?.Speciality == s;
             }
+        }
+
+        public ICommand EditAgentCommand
+        {
+            get => _editAgentCommand ?? new DelegateCommand<Agent>(EditAgent);
+            private set => _editAgentCommand = value;
+        }
+
+        private void EditAgent(Agent obj)
+        {
+            var window = new EditAgentWindow(CurrentAgent);
+            window.Show();
         }
 
         public ICommand SortAgentsCommand

@@ -135,7 +135,11 @@
                      Height="100"
                      Style="{StaticResource JamesBondTextBox}"
                      IsReadOnly="True"/>
-            
+            <Button Grid.Row="4" 
+                    Grid.Column="2"
+                    Style="{StaticResource OrdinaryButton}"
+                    Content="Edit Agent"
+                    Command="{Binding AgentViewModel.EditAgentCommand}"/>
         </Grid>
 
         <!--Agents List-->

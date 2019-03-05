@@ -25,10 +25,10 @@ namespace GUI_AgentAssignments
         }
         public Agent(string aId, string aName, string aSpeciality, string aAssignment)
         {
-         _id = aId;
-         _codeName = aName;
-         _speciality = aSpeciality;
-         _assignment = aAssignment;
+            _id = aId;
+            _codeName = aName;
+            _speciality = aSpeciality;
+            _assignment = aAssignment;
         }
         #endregion
         #region Properties
@@ -56,7 +56,6 @@ namespace GUI_AgentAssignments
                 OnPropertyChanged(nameof(CodeName));
             }
         }
-
         public string Speciality
         {
             get => _speciality;

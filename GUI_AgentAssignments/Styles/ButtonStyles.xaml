@@ -36,8 +36,6 @@
 
     <Style x:Key="OrdinaryButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButton}">
         <Setter Property="Background" Value="LightSteelBlue"/>
-        <Setter Property="Height" Value="32"/>
-        <Setter Property="Width" Value="32"/>
         <Style.Triggers>
             <EventTrigger RoutedEvent="MouseEnter">
                 <BeginStoryboard>

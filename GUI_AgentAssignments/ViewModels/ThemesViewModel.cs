@@ -32,5 +32,10 @@ namespace GUI_AgentAssignments
             }
         }
         #endregion
+        #region Commands
+        public ICommand ChangeColorCommand => _changeColorCommand ?? new DelegateCommand<string>(s => BackgroundBrush = s);
+
+
+        #endregion
     }
 }
