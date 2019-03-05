@@ -64,27 +64,41 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ThemesViewModel.cs" />
+    <Compile Include="Views\AddAgentWindow.xaml.cs">
+      <DependentUpon>AddAgentWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\AddAgentWindowViewModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="EventAggregatorSingleton.cs" />
+    <Compile Include="ViewModels\ThemesViewModel.cs" />
     <Compile Include="ValueConverters\AgentToBooleanConverter.cs" />
     <Compile Include="ValueConverters\BaseValueConverter.cs" />
     <Compile Include="ValueConverters\StringToRGBConverter.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\AddAgentWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Agent.cs" />
-    <Compile Include="AgentViewModel.cs" />
+    <Compile Include="Models\Agent.cs" />
+    <Compile Include="ViewModels\AgentViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AttachedProperties\ButtonAttachedProperties.cs" />
-    <Compile Include="FileHeaderViewModel.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="ViewModels\FileHeaderViewModel.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Styles\ButtonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\DataGridStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

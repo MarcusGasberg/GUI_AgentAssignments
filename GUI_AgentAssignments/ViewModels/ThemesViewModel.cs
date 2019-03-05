@@ -12,7 +12,7 @@ using Prism.Commands;
 
 namespace GUI_AgentAssignments
 {
-    public class ThemesViewModel : INotifyPropertyChanged
+    public class ThemesViewModel : BaseViewModel
     {
         #region Private Fields
 
@@ -31,19 +31,6 @@ namespace GUI_AgentAssignments
                 OnPropertyChanged(nameof(BackgroundBrush));
             }
         }
-        #endregion
-        #region PropertyChanged
-
-        public ICommand ChangeColorCommand => _changeColorCommand ?? new DelegateCommand<string>(s => BackgroundBrush = s);
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        } 
         #endregion
     }
 }

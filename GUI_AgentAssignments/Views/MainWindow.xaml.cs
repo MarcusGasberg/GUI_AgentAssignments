@@ -24,14 +24,12 @@ namespace GUI_AgentAssignments
     {
         public AgentViewModel AgentViewModel { get; set; }
         public FileHeaderViewModel FileHeaderViewModel { get; set; }
-        public EventAggregator EventAggregator { get; set; }
         public ThemesViewModel ThemesViewModel { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-            EventAggregator = new EventAggregator();
-            AgentViewModel = new AgentViewModel(EventAggregator);
-            FileHeaderViewModel = new FileHeaderViewModel(EventAggregator);
+            AgentViewModel = new AgentViewModel(EventAggregatorSingleton.GetInstance());
+            FileHeaderViewModel = new FileHeaderViewModel(EventAggregatorSingleton.GetInstance());
             ThemesViewModel = new ThemesViewModel();
             DataContext = this;
         }

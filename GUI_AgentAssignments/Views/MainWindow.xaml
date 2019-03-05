@@ -78,18 +78,6 @@
             <TextBox Name="FileNameTb" 
                      Width="120"
                      Text="{Binding FileHeaderViewModel.FileName, UpdateSourceTrigger=PropertyChanged}"/>
-            <Label Content="Sort Order"/>
-            <ComboBox Width="120" 
-                      SelectedIndex="0"
-                      ItemsSource="{Binding AgentViewModel.SortOrderList}">
-
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding AgentViewModel.SortAgentsCommand}" 
-                                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectedValue}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </ComboBox>
             <Label Content="Speciality"/>
             <ComboBox Width="100" ItemsSource="{Binding Path=AgentViewModel.SpecialityList}">
                 <i:Interaction.Triggers>
@@ -128,57 +116,40 @@
             <TextBox Grid.Row="0" 
                      Grid.Column="1" 
                      Text="{Binding AgentViewModel.CurrentAgent.ID}"
-                     Style="{StaticResource JamesBondTextBox}"/>
+                     Style="{StaticResource JamesBondTextBox}"
+                     IsReadOnly="True"/>
             <TextBox Grid.Row="1" 
                      Grid.Column="1" 
-                     Text="{Binding AgentViewModel.CurrentAgent.CodeName}"/>
+                     Text="{Binding AgentViewModel.CurrentAgent.CodeName}"
+                     IsReadOnly="True"/>
             <ComboBox Grid.Row="2" 
                      Grid.Column="1" 
                      ItemsSource="{Binding Path=AgentViewModel.SpecialityList}"
                      SelectedValue="{Binding Path=AgentViewModel.CurrentAgent.Speciality}"
-                     />
+                     IsReadOnly="True"/>
             <TextBox Grid.Row="3" 
                      Grid.Column="1"
                      VerticalAlignment="Top"
                      Text="{Binding AgentViewModel.CurrentAgent.Assignment}" 
                      AcceptsReturn="True" 
                      Height="100"
-                     Style="{StaticResource JamesBondTextBox}"/>
+                     Style="{StaticResource JamesBondTextBox}"
+                     IsReadOnly="True"/>
             
         </Grid>
 
         <!--Agents List-->
-        <ListView Grid.Column="1"
+        <DataGrid Grid.Column="1"
                   Grid.Row="2"
                   Name="AgentLv"
                   Grid.RowSpan="2"
                   Margin="10"
                   ItemsSource="{Binding AgentViewModel.Agents}"
                   SelectedIndex="{Binding AgentViewModel.SelectedIndex}"
-                  SelectedItem="{Binding AgentViewModel.CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:Agent}">
-                    <!--Maybe convert into container-->
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0}&#x09;{1}&#x09;{2}&#x09;{3}">
-                                <Binding Path="ID"/>
-                                <Binding Path="CodeName"/>
-                                <Binding Path="Speciality"/>
-                                <Binding Path="Assignment"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Converter={local:AgentToBooleanConverter}}"
-                                     Value="True">
-                            <Setter Property="TextBlock.Foreground" Value="Blue"/>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                  SelectedItem="{Binding AgentViewModel.CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Style="{StaticResource BaseDataGridStyle}"
+                  RowStyle="{StaticResource BaseDataGridRowStyle}">
+        </DataGrid>
 
         <StatusBar Grid.Row="3" Grid.ColumnSpan="2">
             <StatusBarItem>

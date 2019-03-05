@@ -32,6 +32,31 @@
         </Setter>
     </Style>
 
+
+
+    <Style x:Key="OrdinaryButton" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Background" Value="LightSteelBlue"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Width" Value="32"/>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation To="DarkGray" Duration="0:0:0.3" Storyboard.TargetProperty="Background.Color"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation To="LightSteelBlue" Duration="0:0:0.3" Storyboard.TargetProperty="Background.Color"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="ImageButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
         <Setter Property="ContentTemplate">
             <Setter.Value>

@@ -20,8 +20,9 @@ namespace GUI_AgentAssignments
     public class RequestAgentsListEvent : PubSubEvent { }
     public class UpdateAgentsListsEvent : PubSubEvent<Agents> { }
     public class ResetAgentsEvent : PubSubEvent { }
+    public class AddAgentCommand : PubSubEvent<Agent> { }
 
-    public class AgentViewModel : INotifyPropertyChanged
+    public class AgentViewModel : BaseViewModel
     {
         #region Private Fields
 
@@ -44,6 +45,7 @@ namespace GUI_AgentAssignments
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentRequest);
             _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Subscribe((Agents a) => Agents = a);
             _eventAggregator.GetEvent<ResetAgentsEvent>().Subscribe(ResetAgents);
+            _eventAggregator.GetEvent<AddAgentCommand>().Subscribe(a => Agents.Add(a));
             CurrentAgent = new Agent();
 
             Agents = new Agents()
@@ -66,14 +68,6 @@ namespace GUI_AgentAssignments
             "Seduction",
             "Spy",
             "Martinis"
-        };
-        public ObservableCollection<string> SortOrderList { get; set; } = new ObservableCollection<string>()
-        {
-            "None",
-            "ID",
-            "CodeName",
-            "Speciality",
-            "Assignment"
         };
 
 
@@ -155,7 +149,7 @@ namespace GUI_AgentAssignments
 
         public ICommand AddAgentCommand
         {
-            get => _addAgentCommand ?? new DelegateCommand(AddAgent);
+            get => _addAgentCommand ?? new DelegateCommand(OpenAddAgentWindow);
             private set => _addAgentCommand = value;
         }
 
@@ -175,6 +169,12 @@ namespace GUI_AgentAssignments
                 var sortDesc = new SortDescription(s, ListSortDirection.Ascending);
                 collectionView?.SortDescriptions.Add(sortDesc);
             }
+        }
+        private void OpenAddAgentWindow()
+        {
+            var window = new AddAgentWindow();
+            window.Show();
+
         }
 
         private void DeleteAgent()
@@ -207,35 +207,11 @@ namespace GUI_AgentAssignments
             }
         }
 
-        private void AddAgent()
-        {
-            var agentToAdd = new Agent()
-            {
-                ID = CurrentAgent.ID ?? "0",
-                CodeName = CurrentAgent.CodeName ?? "Unknown",
-                Speciality = CurrentAgent.Speciality ?? "Unknown",
-                Assignment = CurrentAgent.Assignment ?? "Unknown"
-            };
-            if (Agents.Any(agent => agentToAdd.CodeName == agent.CodeName &&
-                                    agentToAdd.ID == agent.ID))
-                return;
-            Agents.Add(agentToAdd);
-        }
 
         private void RespondToAgentRequest()
         {
             _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Publish(Agents);
         }
-        #endregion
-        #region Property Changed
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        } 
         #endregion
     }
 }

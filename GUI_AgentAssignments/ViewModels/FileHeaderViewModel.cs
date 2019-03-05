@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Threading;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using GUI_AgentAssignments.Annotations;
+﻿using GUI_AgentAssignments.Annotations;
 using Prism.Commands;
 using Prism.Events;
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Threading;
+using System.Xml.Serialization;
 
 namespace GUI_AgentAssignments
 {
     public class ReceiveAgentsListsEvent : PubSubEvent<Agents> { }
 
-    public class FileHeaderViewModel : INotifyPropertyChanged
+    public class FileHeaderViewModel : BaseViewModel
     {
         #region Private Fields
         private string _filePath = "../../Test";
@@ -107,8 +100,9 @@ namespace GUI_AgentAssignments
             // Process save file dialog box results
             if (result != true)
                 return;
-
-            _eventAggregator.GetEvent<RequestAgentsListEvent>().Publish(); //Request Agents to save to xml file
+            //TODO: Make the function wait for the AgentsList
+            //Request Agents to save to xml files
+            _eventAggregator.GetEvent<RequestAgentsListEvent>().Publish(); 
             FilePath = dlg.FileName;
             try
             {
@@ -126,6 +120,7 @@ namespace GUI_AgentAssignments
 
         private void SaveFile()
         {
+            //TODO: Make the function wait for the AgentsList
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Publish(); //Request Agents to save to xml file
 
             try
@@ -182,16 +177,6 @@ namespace GUI_AgentAssignments
                 MessageBox.Show(e.Message);
             }
         }
-        #endregion
-        #region Property Changed
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        } 
         #endregion
     }
 }
