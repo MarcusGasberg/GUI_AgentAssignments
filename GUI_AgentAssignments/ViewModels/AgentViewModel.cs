@@ -26,8 +26,12 @@ namespace GUI_AgentAssignments
     {
         #region Private Fields
 
-        private Agent _currentAgent;
-        private Agents _agents;
+        private static Agent _currentAgent = new Agent();
+        private static Agents _agents = new Agents()
+        {
+            new Agent("007","James Bond","License to kill","Kill Bad Guy"),
+            new Agent("001","Anna Banana","Seduction","Charm Bad Guy")
+        };
         private int _selectedIndex = -1;
         private ICommand _previousAgentCommand;
         private ICommand _nextAgentCommand;
@@ -44,16 +48,9 @@ namespace GUI_AgentAssignments
         {
             _eventAggregator = EventAggregatorSingleton.GetInstance();
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentRequest);
-            _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Subscribe((Agents a) => Agents = a);
+            _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Subscribe(a => Agents = a);
             _eventAggregator.GetEvent<ResetAgentsEvent>().Subscribe(ResetAgents);
             _eventAggregator.GetEvent<AddAgentCommand>().Subscribe(a => Agents.Add(a));
-            CurrentAgent = new Agent();
-
-            Agents = new Agents()
-            {
-                new Agent("007","James Bond","License to kill","Kill Bad Guy"),
-                new Agent("001","Anna Banana","Seduction","Charm Bad Guy")
-            };
 
         }
 
@@ -94,7 +91,7 @@ namespace GUI_AgentAssignments
                 _agents = value ?? new Agents();
                 OnPropertyChanged(nameof(Agents));
             }
-        }
+        } 
 
         public int SelectedIndex
         {
@@ -157,7 +154,11 @@ namespace GUI_AgentAssignments
 
         public ICommand AddAgentCommand
         {
-            get => _addAgentCommand ?? new DelegateCommand(OpenAddAgentWindow);
+            get => _addAgentCommand ?? new DelegateCommand(
+                       ()=>
+                       {
+                           ViewModelLocator.ApplicationViewModel.GoToPage(ApplicationPage.AddAgentPage);
+                       });
             private set => _addAgentCommand = value;
         }
 
@@ -184,12 +185,6 @@ namespace GUI_AgentAssignments
                 var sortDesc = new SortDescription(s, ListSortDirection.Ascending);
                 collectionView?.SortDescriptions.Add(sortDesc);
             }
-        }
-        private void OpenAddAgentWindow()
-        {
-            var window = new AddAgentWindow();
-            window.Show();
-
         }
 
         private void DeleteAgent()

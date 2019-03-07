@@ -10,11 +10,21 @@ namespace GUI_AgentAssignments
   /// </summary>
     public class ApplicationViewModel : BaseViewModel
     {
+        private ApplicationPage _applicationPage;
         /// <summary>
         /// The current page of the application
         /// </summary>
-        public ApplicationPage CurrentPage { get; private set; } = ApplicationPage.AgentPage;
-        
+        public ApplicationPage CurrentPage
+        {
+            get =>_applicationPage;
+            private set
+            {
+                if (CurrentPage == value)
+                    return;
+                _applicationPage = value;
+                OnPropertyChanged(nameof(CurrentPage));
+            }
+        } 
 
         /// <summary>
         /// Navigate to the specified page
@@ -23,11 +33,14 @@ namespace GUI_AgentAssignments
         public void GoToPage(ApplicationPage page)
         {
             CurrentPage = page;
+            
         }
     }
 
   public enum ApplicationPage
   {
-      AgentPage
+      AgentPage,
+      EditAgentPage,
+      AddAgentPage,
   }
 }

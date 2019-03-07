@@ -15,7 +15,7 @@ namespace GUI_AgentAssignments
         /// <summary>
         /// Singleton instace of the locator
         /// </summary>
-        public static ViewModelLocator Instance { get; private set; } = new ViewModelLocator();
+        public static ViewModelLocator Instance { get; } = new ViewModelLocator();
 
         /// <summary>
         /// The application view model

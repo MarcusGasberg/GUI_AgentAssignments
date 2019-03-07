@@ -23,7 +23,7 @@ namespace GUI_AgentAssignments
         public EditAgentWindow(Agent agentToEdit)
         {
             InitializeComponent();
-            EditAgentWindowViewModel = new EditAgentWindowViewModel(EventAggregatorSingleton.GetInstance(),agentToEdit);
+            EditAgentWindowViewModel = new EditAgentWindowViewModel(agentToEdit);
             DataContext = EditAgentWindowViewModel;
         }
     }

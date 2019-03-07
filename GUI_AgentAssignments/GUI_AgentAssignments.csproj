@@ -64,6 +64,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
+    <Compile Include="AttachedProperties\NoFrameHistoryAttachedProperty.cs" />
     <Compile Include="Pages\AgentPage.xaml.cs">
       <DependentUpon>AgentPage.xaml</DependentUpon>
     </Compile>
@@ -79,10 +81,10 @@
     <Compile Include="Views\EditAgentWindow.xaml.cs">
       <DependentUpon>EditAgentWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AddAgentWindow.xaml.cs">
-      <DependentUpon>AddAgentWindow.xaml</DependentUpon>
+    <Compile Include="Pages\AddAgentPage.xaml.cs">
+      <DependentUpon>AddAgentPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\AddAgentWindowViewModel.cs" />
+    <Compile Include="ViewModels\AddAgentViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="EventAggregatorSingleton.cs" />
     <Compile Include="ViewModels\ThemesViewModel.cs" />
@@ -101,7 +103,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\AddAgentWindow.xaml">
+    <Page Include="Pages\AddAgentPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -17,9 +17,9 @@ namespace GUI_AgentAssignments
         private ICommand _confirmEditCommand;
         private ICommand _cancelCommand;
         private IEventAggregator _eventAggregator;
-        public EditAgentWindowViewModel(IEventAggregator ea, Agent agentToEdit)
+        public EditAgentWindowViewModel( Agent agentToEdit)
         {
-            _eventAggregator = ea;
+            _eventAggregator = EventAggregatorSingleton.GetInstance();
             PropertyChanged += AgentToEdit_PropertyChanged;
             AgentToEdit = agentToEdit;
         }

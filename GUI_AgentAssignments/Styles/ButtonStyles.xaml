@@ -60,8 +60,8 @@
             <Setter.Value>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding Path=(local:ButtonAttachedProperties.Image), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}"></Image>
-                        <ContentPresenter Content="{Binding Path=Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}"></ContentPresenter>
+                        <Image Source="{Binding Path=(local:ButtonAttachedProperties.Value), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}"/>
+                        <ContentPresenter Content="{Binding Path=Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}"/>
                     </StackPanel>
                 </DataTemplate>
             </Setter.Value>

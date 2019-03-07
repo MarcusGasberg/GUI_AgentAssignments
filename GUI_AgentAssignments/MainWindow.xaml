@@ -52,7 +52,7 @@
                             Source={x:Static local:ViewModelLocator.Instance},
                             Converter={local:ApplicationPageValueConverter}}"
                        
-                        CurrentPage="{Binding}"/>
+                        CurrentPage="{Binding }"/>
 
         <!--Footer statusbar-->
         <StatusBar Grid.Row="2" Grid.ColumnSpan="2">

@@ -73,7 +73,7 @@ namespace GUI_AgentAssignments
             newPageFrame.Content = null;
 
             //Move the previous page into the old page frame
-            oldPageFrame.Content = oldPageContent;
+            oldPageFrame.Content = null;
             //Set the new page content
             newPageFrame.Content = e.NewValue;
         }

@@ -7,9 +7,10 @@ using System.Windows;
 using System.Windows.Controls;
 
 namespace GUI_AgentAssignments
-{/// <summary>
- /// a base page for all pages to gain base functionality
- /// </summary>
+{
+    /// <summary>
+    /// a base page for all pages to gain base functionality
+    /// </summary>
     public class BasePage : Page
     {
 
