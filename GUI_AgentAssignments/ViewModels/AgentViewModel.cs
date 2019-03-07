@@ -54,12 +54,22 @@ namespace GUI_AgentAssignments
                 new Agent("007","James Bond","License to kill","Kill Bad Guy"),
                 new Agent("001","Anna Banana","Seduction","Charm Bad Guy")
             };
-            
+
         }
         #endregion
         #region Properties
 
-
+        public ObservableCollection<string> SpecialityList { get; set; } = new ObservableCollection<string>()
+        {
+            "None",
+            "Assassination",
+            "License to kill",
+            "Bombs",
+            "Low Profile",
+            "Seduction",
+            "Spy",
+            "Martinis"
+        };
 
         public Agent CurrentAgent
         {
@@ -120,14 +130,8 @@ namespace GUI_AgentAssignments
 
         public ICommand EditAgentCommand
         {
-            get => _editAgentCommand ?? new DelegateCommand<Agent>(EditAgent);
+            get => _editAgentCommand ?? new DelegateCommand(EditAgent);
             private set => _editAgentCommand = value;
-        }
-
-        private void EditAgent(Agent obj)
-        {
-            var window = new EditAgentWindow(CurrentAgent);
-            window.Show();
         }
 
         public ICommand SortAgentsCommand
@@ -162,6 +166,13 @@ namespace GUI_AgentAssignments
         }
         #endregion
         #region Private Helpers for Commands
+        private void EditAgent()
+        {
+            if (CurrentAgent.Equals(default(Agent)))
+                return;
+            var window = new EditAgentWindow(CurrentAgent);
+            window.Show();
+        }
         private void SortAgents(string s)
         {
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);

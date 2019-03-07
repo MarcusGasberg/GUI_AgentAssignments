@@ -139,7 +139,8 @@
                     Grid.Column="2"
                     Style="{StaticResource OrdinaryButton}"
                     Content="Edit Agent"
-                    Command="{Binding AgentViewModel.EditAgentCommand}"/>
+                    Command="{Binding AgentViewModel.EditAgentCommand}"
+                    CommandParameter="{Binding AgentViewModel.CurrentAgent}"/>
         </Grid>
 
         <!--Agents List-->
@@ -153,8 +154,15 @@
                   SelectedItem="{Binding AgentViewModel.CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Style="{StaticResource BaseDataGridStyle}"
                   RowStyle="{StaticResource BaseDataGridRowStyle}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding AgentViewModel.EditAgentCommand}" 
+                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectedValue}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </DataGrid>
 
+        <!--Footer statusbar-->
         <StatusBar Grid.Row="3" Grid.ColumnSpan="2">
             <StatusBarItem>
                 <TextBlock Text="{Binding AgentViewModel.Agents.Count, StringFormat=Agent Amount: {0}}"/>

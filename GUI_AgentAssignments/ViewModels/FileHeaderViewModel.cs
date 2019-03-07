@@ -1,14 +1,12 @@
-﻿using GUI_AgentAssignments.Annotations;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Events;
 using System;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Xml.Serialization;
+using GUI_AgentAssignments.Annotations;
 
 namespace GUI_AgentAssignments
 {

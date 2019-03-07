@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI_AgentAssignments"
         mc:Ignorable="d"
-        Title="AddAgentWindow" Height="300" Width="500">
+        Title="EditAgentWindow" Height="300" Width="500">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Prism.Commands;
 using System.Windows.Input;
-using System.Windows.Media;
-using GUI_AgentAssignments.Annotations;
-using Prism.Commands;
 
 namespace GUI_AgentAssignments
 {
