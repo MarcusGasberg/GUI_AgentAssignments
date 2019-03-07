@@ -40,9 +40,9 @@ namespace GUI_AgentAssignments
 
         #endregion
         #region Default Constructor
-        public AgentViewModel(IEventAggregator ea)
+        public AgentViewModel()
         {
-            _eventAggregator = ea;
+            _eventAggregator = EventAggregatorSingleton.GetInstance();
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentRequest);
             _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Subscribe((Agents a) => Agents = a);
             _eventAggregator.GetEvent<ResetAgentsEvent>().Subscribe(ResetAgents);
@@ -56,6 +56,7 @@ namespace GUI_AgentAssignments
             };
 
         }
+
         #endregion
         #region Properties
 
@@ -117,6 +118,7 @@ namespace GUI_AgentAssignments
 
         private void FilterSpeciality(string s)
         {
+            
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
             if (s == "None")
             {

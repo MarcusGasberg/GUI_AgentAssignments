@@ -7,15 +7,13 @@
         xmlns:prism="http://prismlibrary.com/"
         xmlns:local="clr-namespace:GUI_AgentAssignments"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-        Background="{Binding ThemesViewModel.BackgroundBrush, Converter={local:StringToRGBConverter}}">
-    <Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+    <Grid Margin="5" 
+          Background="{Binding ThemesViewModel.BackgroundBrush, Converter={local:StringToRGBConverter}}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -35,16 +33,6 @@
                 <MenuItem Header="E_xit" 
                           Command="{Binding FileHeaderViewModel.ExitAppCommand}"/>
             </MenuItem>
-            <MenuItem Header="Agents">
-                <MenuItem Header="Previous" 
-                          Command="{Binding AgentViewModel.PreviousAgentCommand}"/>
-                <MenuItem Header="Next" 
-                          Command="{Binding AgentViewModel.NextAgentCommand}"/>
-                <MenuItem Header="Add New" 
-                          Command="{Binding AgentViewModel.AddAgentCommand}"/>
-                <MenuItem Header="Delete" 
-                          Command="{Binding AgentViewModel.DeleteAgentCommand}"/>
-            </MenuItem>
             <MenuItem Header="Color Themes">
                 <MenuItem Header="Yellow" 
                           Command="{Binding ThemesViewModel.ChangeColorCommand}" 
@@ -58,115 +46,16 @@
             </MenuItem>
         </Menu>
 
-        <!--Toolbar-->
-        <ToolBar Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
-                 Background="{Binding ThemesViewModel.BackgroundBrush, Converter={local:StringToRGBConverter}}">
-            <Button Style="{StaticResource ImageButton}"
-                    local:ButtonAttachedProperties.Image="Images/less_than.png"
-                    Command="{Binding AgentViewModel.PreviousAgentCommand}"/>
-            <Button Style="{StaticResource ImageButton}"
-                    local:ButtonAttachedProperties.Image="Images/greater_than.png"
-                    Command="{Binding AgentViewModel.NextAgentCommand}"/>
-            <Button Style="{StaticResource ImageButton}"
-                    local:ButtonAttachedProperties.Image="Images/plus_sign.png" 
-                    Command="{Binding AgentViewModel.AddAgentCommand}"/>
-            <Button Style="{StaticResource ImageButton}"
-                    local:ButtonAttachedProperties.Image="Images/minus_sign.png"
-                    Command="{Binding AgentViewModel.DeleteAgentCommand}"/>
-            <Label Content="File _Name:"
-                   Target="{Binding ElementName=FileNameTb}" />
-            <TextBox Name="FileNameTb" 
-                     Width="120"
-                     Text="{Binding FileHeaderViewModel.FileName, UpdateSourceTrigger=PropertyChanged}"/>
-            <Label Content="Speciality"/>
-            <ComboBox Width="100" ItemsSource="{Binding Path=AgentViewModel.SpecialityList}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding AgentViewModel.FilterSpecialityCommand}" 
-                                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectedValue}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </ComboBox>
-
-        </ToolBar>
-
-        <!--Agent Information-->
-        <Grid Grid.Row="2" Grid.Column="0" Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Label Grid.Row="0" 
-                   Content="_ID"/>
-            <Label Grid.Row="1" 
-                   Content="_CodeName"/>
-            <Label Grid.Row="2" 
-                   Content="_Speciality"/>
-            <Label Grid.Row="3" 
-                   Content="_Assignment"/>
-
-            <TextBox Grid.Row="0" 
-                     Grid.Column="1" 
-                     Text="{Binding AgentViewModel.CurrentAgent.ID}"
-                     Style="{StaticResource JamesBondTextBox}"
-                     IsReadOnly="True"/>
-            <TextBox Grid.Row="1" 
-                     Grid.Column="1" 
-                     Text="{Binding AgentViewModel.CurrentAgent.CodeName}"
-                     IsReadOnly="True"/>
-            <ComboBox Grid.Row="2" 
-                     Grid.Column="1" 
-                     ItemsSource="{Binding Path=AgentViewModel.SpecialityList}"
-                     SelectedValue="{Binding Path=AgentViewModel.CurrentAgent.Speciality}"
-                     IsReadOnly="True"/>
-            <TextBox Grid.Row="3" 
-                     Grid.Column="1"
-                     VerticalAlignment="Top"
-                     Text="{Binding AgentViewModel.CurrentAgent.Assignment}" 
-                     AcceptsReturn="True" 
-                     Height="100"
-                     Style="{StaticResource JamesBondTextBox}"
-                     IsReadOnly="True"/>
-            <Button Grid.Row="4" 
-                    Grid.Column="2"
-                    Style="{StaticResource OrdinaryButton}"
-                    Content="Edit Agent"
-                    Command="{Binding AgentViewModel.EditAgentCommand}"
-                    CommandParameter="{Binding AgentViewModel.CurrentAgent}"/>
-        </Grid>
-
-        <!--Agents List-->
-        <DataGrid Grid.Column="1"
-                  Grid.Row="2"
-                  Name="AgentLv"
-                  Grid.RowSpan="2"
-                  Margin="10"
-                  ItemsSource="{Binding AgentViewModel.Agents}"
-                  SelectedIndex="{Binding AgentViewModel.SelectedIndex}"
-                  SelectedItem="{Binding AgentViewModel.CurrentAgent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  Style="{StaticResource BaseDataGridStyle}"
-                  RowStyle="{StaticResource BaseDataGridRowStyle}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding AgentViewModel.EditAgentCommand}" 
-                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectedValue}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </DataGrid>
+        <local:PageHost Grid.Row="1" 
+                        d:DataContext=""
+                        DataContext="{Binding ApplicationViewModel.CurrentPage, 
+                            Source={x:Static local:ViewModelLocator.Instance},
+                            Converter={local:ApplicationPageValueConverter}}"
+                       
+                        CurrentPage="{Binding}"/>
 
         <!--Footer statusbar-->
-        <StatusBar Grid.Row="3" Grid.ColumnSpan="2">
-            <StatusBarItem>
-                <TextBlock Text="{Binding AgentViewModel.Agents.Count, StringFormat=Agent Amount: {0}}"/>
-            </StatusBarItem>
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2">
             <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock Text="{Binding FileHeaderViewModel.ApplicationTime}"/>
             </StatusBarItem>

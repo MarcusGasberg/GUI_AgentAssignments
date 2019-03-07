@@ -12,17 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
-using Prism.Events;
 
 namespace GUI_AgentAssignments
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AgentPage.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AgentPage : BasePage<AgentViewModel>
     {
-        public MainWindow()
+        public AgentPage()
         {
             InitializeComponent();
         }
