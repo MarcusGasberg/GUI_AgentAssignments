@@ -27,6 +27,9 @@ namespace GUI_AgentAssignments
 
         #endregion
         #region Constructors
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public FileHeaderViewModel()
         {
             _eventAggregator = EventAggregatorSingleton.Instance;
@@ -38,9 +41,14 @@ namespace GUI_AgentAssignments
         } 
         #endregion
         #region Properties
-
+        /// <summary>
+        /// Obeservable Collection containing all the agents 
+        /// </summary>
         public Agents AgentsList { get; set; } = new Agents();
 
+        /// <summary>
+        /// The filepath for where to save the file
+        /// </summary>
         public string FilePath
         {
             get => _filePath;
@@ -52,7 +60,9 @@ namespace GUI_AgentAssignments
                 OnPropertyChanged(nameof(FilePath));
             }
         }
-
+        /// <summary>
+        /// The current time in the application
+        /// </summary>
         public string ApplicationTime
         {
             get => _applicationTime;
@@ -66,13 +76,22 @@ namespace GUI_AgentAssignments
         }
         #endregion
         #region Commands
-
+        /// <summary>
+        /// Command to create a new file. 
+        /// </summary>
         public ICommand NewFileCommand => _newFileCommand ?? new DelegateCommand(CreateNewAgentsFile);
-
+        /// <summary>
+        /// Command to open a new agents file, which calls <see cref="OpenAgentFile"/>
+        /// </summary>
         public ICommand OpenFileCommand => _openFileCommand ?? new DelegateCommand(OpenAgentFile);
+        /// <summary>
+        /// Command for saving a file calling <see cref="SaveFile"/>
+        /// </summary>
         public ICommand SaveFileCommand => _saveFileCommand ?? new DelegateCommand(SaveFile);
 
-
+        /// <summary>
+        /// Command for saving a file as a Name, calling <see cref="SaveFileAs"/>
+        /// </summary>
         public ICommand SaveFileAsCommand => _saveFileAsCommand ?? new DelegateCommand(SaveFileAs);
 
         public ICommand ExitAppCommand
@@ -84,7 +103,9 @@ namespace GUI_AgentAssignments
         }
         #endregion
         #region Private Helper Function
-
+        /// <summary>
+        /// Creates a <see cref="Microsoft.Win32.SaveFileDialog"/> and saves a file as the specified name.
+        /// </summary>
         private void SaveFileAs()
         {
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
@@ -115,7 +136,9 @@ namespace GUI_AgentAssignments
                 MessageBox.Show($"{e.Message}");
             }
         }
-
+        /// <summary>
+        /// Gets the agents to save to a file and saves them in XML format.
+        /// </summary>
         private void SaveFile()
         {
             //TODO: Make the function wait for the AgentsList
@@ -137,13 +160,19 @@ namespace GUI_AgentAssignments
                 MessageBox.Show($"{e.Message}");
             }
         }
+
+        /// <summary>
+        /// Function which prompts the user if they wants to create a new file. Then clears the <see cref="AgentsList"/>
+        /// </summary>
         public void CreateNewAgentsFile()
         {
             MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Are you sure you want to override this file?", "New File Confirmation", System.Windows.MessageBoxButton.YesNo);
             if (messageBoxResult == MessageBoxResult.Yes)
                 _eventAggregator.GetEvent<ResetAgentsEvent>().Publish();
         }
-
+        /// <summary>
+        /// Opens a <see cref="Microsoft.Win32.OpenFileDialog"/> for opening a file and deserializes it
+        /// </summary>
         public void OpenAgentFile()
         {
 

@@ -18,6 +18,7 @@ namespace GUI_AgentAssignments
 {
 
     public class RequestAgentsListEvent : PubSubEvent { }
+    public class RequestCurrentAgentEvent : PubSubEvent { }
     public class UpdateAgentsListsEvent : PubSubEvent<Agents> { }
     public class ResetAgentsEvent : PubSubEvent { }
     public class AddAgentCommand : PubSubEvent<Agent> { }
@@ -47,11 +48,17 @@ namespace GUI_AgentAssignments
         public AgentViewModel()
         {
             _eventAggregator = EventAggregatorSingleton.Instance;
-            _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentRequest);
+            _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentsListRequest);
+            _eventAggregator.GetEvent<RequestCurrentAgentEvent>().Subscribe(RespondToCurrentAgentRequest);
             _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Subscribe(a => Agents = a);
             _eventAggregator.GetEvent<ResetAgentsEvent>().Subscribe(ResetAgents);
             _eventAggregator.GetEvent<AddAgentCommand>().Subscribe(a => Agents.Add(a));
 
+        }
+
+        private void RespondToCurrentAgentRequest()
+        {
+            _eventAggregator.GetEvent<ReceiveCurrentAgentEvent>().Publish(CurrentAgent);
         }
 
         #endregion
@@ -161,8 +168,7 @@ namespace GUI_AgentAssignments
         {
             if (CurrentAgent.Equals(default(Agent)))
                 return;
-            var window = new EditAgentWindow(CurrentAgent);
-            window.Show();
+            ViewModelLocator.ApplicationViewModel.GoToPage(ApplicationPage.EditAgentPage);
         }
         private void SortAgents(string s)
         {
@@ -206,7 +212,7 @@ namespace GUI_AgentAssignments
         }
 
 
-        private void RespondToAgentRequest()
+        private void RespondToAgentsListRequest()
         {
             _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Publish(Agents);
         }

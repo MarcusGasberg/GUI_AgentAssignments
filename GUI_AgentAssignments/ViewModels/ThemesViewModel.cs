@@ -6,7 +6,6 @@ namespace GUI_AgentAssignments
     public class ThemesViewModel : BaseViewModel
     {
         #region Private Fields
-
         private ICommand _changeColorCommand;
         private string _backgroundBrush = "FF0000";
         #endregion

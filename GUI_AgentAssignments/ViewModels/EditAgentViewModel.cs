@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,26 +12,29 @@ using Prism.Events;
 
 namespace GUI_AgentAssignments
 {
-    public class EditAgentWindowViewModel : BaseViewModel
+    public class ReceiveCurrentAgentEvent : PubSubEvent<Agent> { }
+    public class EditAgentViewModel : BaseViewModel
     {
         private Agent _agentToEdit = new Agent();
         private ICommand _confirmEditCommand;
         private ICommand _cancelCommand;
         private IEventAggregator _eventAggregator;
-        public EditAgentWindowViewModel( Agent agentToEdit)
+        public EditAgentViewModel()
         {
             _eventAggregator = EventAggregatorSingleton.Instance;
-            PropertyChanged += AgentToEdit_PropertyChanged;
-            AgentToEdit = agentToEdit;
+            PropertyChanged += AgentToEditOnPropertyChanged;
+            _eventAggregator.GetEvent<ReceiveCurrentAgentEvent>().Subscribe(a => AgentToEdit = a);
+            _eventAggregator.GetEvent<RequestCurrentAgentEvent>().Publish();
         }
 
-        private void AgentToEdit_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void AgentToEditOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            AgentToView = new Agent(AgentToEdit.ID, AgentToEdit.CodeName,
-                AgentToEdit.Speciality, AgentToEdit.Assignment);
+            if (AgentToEdit == AgentToView)
+                return;
+            AgentToView = new Agent(AgentToEdit.ID, AgentToEdit.CodeName, AgentToEdit.Speciality, AgentToEdit.Assignment);
         }
 
-        public Agent AgentToView { get; set; }
+        public Agent AgentToView { get; set; } 
 
         public Agent AgentToEdit
         {
@@ -46,23 +50,24 @@ namespace GUI_AgentAssignments
 
         public ICommand ConfirmEditCommand
         {
-            get => _confirmEditCommand ?? new DelegateCommand<Window>(AddAgent);
+            get => _confirmEditCommand ?? new DelegateCommand(AddAgent);
             private set => _confirmEditCommand = value;
         }
 
         public ICommand CancelCommand
         {
-            get => _cancelCommand ?? new DelegateCommand<Window>(w => w.Close());
+            get => _cancelCommand ?? new DelegateCommand(() =>
+                       ViewModelLocator.ApplicationViewModel.GoToPage(ApplicationPage.AgentPage));
             private set => _cancelCommand = value;
         }
 
-        private void AddAgent(Window w)
+        private void AddAgent()
         {
             AgentToEdit.ID = AgentToView.ID;
             AgentToEdit.CodeName = AgentToView.CodeName;
             AgentToEdit.Speciality = AgentToView.Speciality;
             AgentToEdit.Assignment = AgentToView.Assignment;
-            w.Close();
+            ViewModelLocator.ApplicationViewModel.GoToPage(ApplicationPage.AgentPage);
         }
     }
 }

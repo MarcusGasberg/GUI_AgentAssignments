@@ -17,14 +17,11 @@ namespace GUI_AgentAssignments
     /// <summary>
     /// Interaction logic for AddAgentWindow.xaml
     /// </summary>
-    public partial class EditAgentWindow : Window
+    public partial class EditAgentPage : BasePage<EditAgentViewModel>
     {
-        public EditAgentWindowViewModel EditAgentWindowViewModel { get; set; }
-        public EditAgentWindow(Agent agentToEdit)
+        public EditAgentPage()
         {
             InitializeComponent();
-            EditAgentWindowViewModel = new EditAgentWindowViewModel(agentToEdit);
-            DataContext = EditAgentWindowViewModel;
         }
     }
 }

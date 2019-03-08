@@ -11,8 +11,10 @@ namespace GUI_AgentAssignments
     /// </summary>
     public class ViewModelLocator
     {
+        #region Constructor
         private ViewModelLocator()
-        {}
+        { } 
+        #endregion
         #region Public Properties
         /// <summary>
         /// Singleton instance of the locator

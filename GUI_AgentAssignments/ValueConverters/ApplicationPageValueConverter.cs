@@ -20,7 +20,7 @@ namespace GUI_AgentAssignments
                 case ApplicationPage.AddAgentPage:
                     return new AddAgentPage();
                 case ApplicationPage.EditAgentPage:
-                    
+                    return new EditAgentPage();
                 default:
                     Debugger.Break();
                     return null;
