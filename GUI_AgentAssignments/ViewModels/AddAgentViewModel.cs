@@ -15,27 +15,13 @@ namespace GUI_AgentAssignments
     {
         private ICommand _addAgentCommand;
         private ICommand _cancelCommand;
-        private IEventAggregator _eventAggregator;
+        private readonly IEventAggregator _eventAggregator;
         public AddAgentViewModel()
         {
-            _eventAggregator = EventAggregatorSingleton.GetInstance();
+            _eventAggregator = EventAggregatorSingleton.Instance;
             NewAgent = new Agent();
         }
         public Agent NewAgent { get; set; }
-
-        //TODO: Should be changed to keep DRY. It's also in AgentViewModel
-        public ObservableCollection<string> SpecialityList { get; set; } = new ObservableCollection<string>()
-        {
-            "None",
-            "Assassination",
-            "License to kill",
-            "Bombs",
-            "Low Profile",
-            "Seduction",
-            "Spy",
-            "Martinis"
-        };
-
 
         public ICommand AddAgentCommand
         {

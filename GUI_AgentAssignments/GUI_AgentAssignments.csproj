@@ -66,6 +66,7 @@
     </ApplicationDefinition>
     <Compile Include="AttachedProperties\BaseAttachedProperty.cs" />
     <Compile Include="AttachedProperties\NoFrameHistoryAttachedProperty.cs" />
+    <Compile Include="Models\SpecialityList.cs" />
     <Compile Include="Pages\AgentPage.xaml.cs">
       <DependentUpon>AgentPage.xaml</DependentUpon>
     </Compile>

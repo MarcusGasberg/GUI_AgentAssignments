@@ -9,12 +9,7 @@ namespace GUI_AgentAssignments
 {
     public class EventAggregatorSingleton
     {
-        private static readonly EventAggregator _singleton = new EventAggregator();
         private EventAggregatorSingleton() { }
-
-        public static EventAggregator GetInstance()
-        {
-            return _singleton;
-        }
+        public static EventAggregator Instance { get; } = new EventAggregator();
     }
 }

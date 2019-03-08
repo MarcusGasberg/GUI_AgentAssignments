@@ -36,7 +36,7 @@
                     local:ButtonAttachedProperties.Value="../Images/minus_sign.png"
                     Command="{Binding DeleteAgentCommand}"/>
             <Label Content="Speciality"/>
-            <ComboBox Width="100" ItemsSource="{Binding SpecialityList}">
+            <ComboBox Width="100" ItemsSource="{x:Static local:SpecialityList.Collection}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding FilterSpecialityCommand}" 

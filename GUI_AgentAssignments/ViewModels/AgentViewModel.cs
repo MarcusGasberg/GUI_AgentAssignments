@@ -46,7 +46,7 @@ namespace GUI_AgentAssignments
         #region Default Constructor
         public AgentViewModel()
         {
-            _eventAggregator = EventAggregatorSingleton.GetInstance();
+            _eventAggregator = EventAggregatorSingleton.Instance;
             _eventAggregator.GetEvent<RequestAgentsListEvent>().Subscribe(RespondToAgentRequest);
             _eventAggregator.GetEvent<UpdateAgentsListsEvent>().Subscribe(a => Agents = a);
             _eventAggregator.GetEvent<ResetAgentsEvent>().Subscribe(ResetAgents);
@@ -56,18 +56,6 @@ namespace GUI_AgentAssignments
 
         #endregion
         #region Properties
-
-        public ObservableCollection<string> SpecialityList { get; set; } = new ObservableCollection<string>()
-        {
-            "None",
-            "Assassination",
-            "License to kill",
-            "Bombs",
-            "Low Profile",
-            "Seduction",
-            "Spy",
-            "Martinis"
-        };
 
         public Agent CurrentAgent
         {

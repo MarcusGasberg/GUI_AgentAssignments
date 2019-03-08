@@ -29,7 +29,7 @@ namespace GUI_AgentAssignments
         #region Constructors
         public FileHeaderViewModel()
         {
-            _eventAggregator = EventAggregatorSingleton.GetInstance();
+            _eventAggregator = EventAggregatorSingleton.Instance;
             _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Subscribe((a) => AgentsList = a);
             _dispatcherTimer = new DispatcherTimer();
             _dispatcherTimer.Tick += (s, e) => ApplicationTime = DateTime.Now.ToLongTimeString();

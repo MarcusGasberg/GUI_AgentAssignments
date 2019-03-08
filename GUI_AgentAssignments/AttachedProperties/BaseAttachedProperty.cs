@@ -10,10 +10,10 @@ namespace GUI_AgentAssignments
     /// <summary>
     /// Base attached property to replace the vanilla WPF attached property
     /// </summary>
-    /// <typeparam name="Parent"> The parent class to be the attached property</typeparam>
-    /// <typeparam name="Property"> The type of the attached property</typeparam>
-    public abstract class BaseAttachedProperty<Parent, Property>
-        where Parent : new()
+    /// <typeparam name="TParent"> The parent class to be the attached property</typeparam>
+    /// <typeparam name="TProperty"> The type of the attached property</typeparam>
+    public abstract class BaseAttachedProperty<TParent, TProperty>
+        where TParent : new()
     {
         #region Public Events
         /// <summary>
@@ -33,7 +33,7 @@ namespace GUI_AgentAssignments
         /// <summary>
         /// A single instance of our parent class
         /// </summary>
-        public static Parent Instance { get; private set; } = new Parent();
+        public static TParent Instance { get; private set; } = new TParent();
 
         #endregion
 
@@ -44,10 +44,10 @@ namespace GUI_AgentAssignments
         /// </summary>
         public static readonly DependencyProperty ValueProperty = DependencyProperty.RegisterAttached(
             "Value",
-            typeof(Property),
-            typeof(BaseAttachedProperty<Parent, Property>),
+            typeof(TProperty),
+            typeof(BaseAttachedProperty<TParent, TProperty>),
             new UIPropertyMetadata(
-                default(Property),
+                default(TProperty),
                 new PropertyChangedCallback(OnValuePropertyChanged),
                 new CoerceValueCallback(OnValuePropertyUpdated)
                 ));
@@ -55,28 +55,29 @@ namespace GUI_AgentAssignments
         /// <summary>
         /// The callback event the <see cref="ValueProperty"/> is changed
         /// </summary>
-        /// <param name="d">The UI element that had it's property changed</param>
+        /// <param name="d">The UI element that had its property changed</param>
         /// <param name="e">The arguments for the event</param>
         private static void OnValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             //Call the parent function
-            (Instance as BaseAttachedProperty<Parent, Property>)?.OnValueChanged(d, e);
+            (Instance as BaseAttachedProperty<TParent, TProperty>)?.OnValueChanged(d, e);
 
             //Call event listeners
-            (Instance as BaseAttachedProperty<Parent, Property>)?.ValueChanged(d, e);
+            (Instance as BaseAttachedProperty<TParent, TProperty>)?.ValueChanged(d, e);
         }
+
         /// <summary>
         /// The callback event the <see cref="ValueProperty"/> is changed even if it is the same value
         /// </summary>
-        /// <param name="d">The UI element that had it's property changed</param>
-        /// <param name="e">The arguments for the event</param>
+        /// <param name="d">The UI element that had its property changed</param>
+        /// <param name="value">The argument for the event</param>
         private static object OnValuePropertyUpdated(DependencyObject d, object value)
         {
             //Call the parent function
-            (Instance as BaseAttachedProperty<Parent, Property>)?.OnValueUpdated(d, value);
+            (Instance as BaseAttachedProperty<TParent, TProperty>)?.OnValueUpdated(d, value);
 
             //Call event listeners
-            (Instance as BaseAttachedProperty<Parent, Property>)?.ValueUpdated(d, value);
+            (Instance as BaseAttachedProperty<TParent, TProperty>)?.ValueUpdated(d, value);
 
             return value;
         }
@@ -86,14 +87,14 @@ namespace GUI_AgentAssignments
         /// </summary>
         /// <param name="d">The element to get the property from</param>
         /// <returns></returns>
-        public static Property GetValue(DependencyObject d) => (Property)d.GetValue(ValueProperty);
+        public static TProperty GetValue(DependencyObject d) => (TProperty)d.GetValue(ValueProperty);
 
         /// <summary>
         /// Sets the attached property
         /// </summary>
         /// <param name="d">The element to get the property from</param>
         /// <param name="value">The value to set the property to</param>
-        public static void SetValue(DependencyObject d, Property value) => d.SetValue(ValueProperty, value);
+        public static void SetValue(DependencyObject d, TProperty value) => d.SetValue(ValueProperty, value);
 
         #endregion
 
@@ -109,7 +110,7 @@ namespace GUI_AgentAssignments
         /// The method that is called when any attached property of this type is changed, even when the value is the same
         /// </summary>
         /// <param name="sender">The UI element that this property was changed for</param>
-        /// <param name="e">The arguments for this event</param>
+        /// <param name="value">The value to update to</param>
         public virtual void OnValueUpdated(DependencyObject sender, object value) { }
 
 

@@ -19,7 +19,7 @@ namespace GUI_AgentAssignments
         private IEventAggregator _eventAggregator;
         public EditAgentWindowViewModel( Agent agentToEdit)
         {
-            _eventAggregator = EventAggregatorSingleton.GetInstance();
+            _eventAggregator = EventAggregatorSingleton.Instance;
             PropertyChanged += AgentToEdit_PropertyChanged;
             AgentToEdit = agentToEdit;
         }
@@ -43,20 +43,6 @@ namespace GUI_AgentAssignments
                 OnPropertyChanged(nameof(AgentToEdit));
             }
         }
-
-        //TODO: Should be changed to keep DRY. It's also in AgentViewModel
-        public ObservableCollection<string> SpecialityList { get; set; } = new ObservableCollection<string>()
-        {
-            "None",
-            "Assassination",
-            "License to kill",
-            "Bombs",
-            "Low Profile",
-            "Seduction",
-            "Spy",
-            "Martinis"
-        };
-
 
         public ICommand ConfirmEditCommand
         {
