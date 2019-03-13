@@ -78,10 +78,9 @@
                      Grid.Column="1" 
                      Text="{Binding CurrentAgent.CodeName}"
                      IsReadOnly="True"/>
-            <ComboBox Grid.Row="2" 
-                     Grid.Column="1" 
-                     ItemsSource="{Binding SpecialityList}"
-                     SelectedValue="{Binding CurrentAgent.Speciality}"
+            <TextBox Grid.Row="2" 
+                     Grid.Column="1"
+                     Text="{Binding CurrentAgent.Speciality}"
                      IsReadOnly="True"/>
             <TextBox Grid.Row="3" 
                      Grid.Column="1"
