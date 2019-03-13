@@ -45,6 +45,9 @@ namespace GUI_AgentAssignments
 
         #endregion
         #region Default Constructor
+        /// <summary>
+        /// Default Constructors. Registers to the <see cref="EventAggregator"/> for the appropriate events.
+        /// </summary>
         public AgentViewModel()
         {
             _eventAggregator = EventAggregatorSingleton.Instance;
@@ -54,11 +57,6 @@ namespace GUI_AgentAssignments
             _eventAggregator.GetEvent<ResetAgentsEvent>().Subscribe(ResetAgents);
             _eventAggregator.GetEvent<AddAgentCommand>().Subscribe(a => Agents.Add(a));
 
-        }
-
-        private void RespondToCurrentAgentRequest()
-        {
-            _eventAggregator.GetEvent<ReceiveCurrentAgentEvent>().Publish(CurrentAgent);
         }
 
         #endregion
@@ -108,20 +106,6 @@ namespace GUI_AgentAssignments
             set => _filterSpecialityCommand = value;
         }
 
-        private void FilterSpeciality(string s)
-        {
-            
-            ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
-            if (s == "None")
-            {
-                collectionView.Filter = null;
-            }
-            else
-            {
-                collectionView.Filter = o => (o as Agent)?.Speciality == s;
-            }
-        }
-
         public ICommand EditAgentCommand
         {
             get => _editAgentCommand ?? new DelegateCommand(EditAgent);
@@ -164,37 +148,68 @@ namespace GUI_AgentAssignments
         }
         #endregion
         #region Private Helpers for Commands
+
+        /// <summary>
+        /// Filters the <see cref="Agents"/> by property
+        /// </summary>
+        /// <param name="filterPropertyName">The property name to filter by</param>
+        private void FilterSpeciality(string filterPropertyName)
+        {
+
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
+            if (filterPropertyName == "None")
+            {
+                collectionView.Filter = null;
+            }
+            else
+            {
+                collectionView.Filter = o => (o as Agent)?.Speciality == filterPropertyName;
+            }
+        }
+        /// <summary>
+        /// Navigates to <see cref="EditAgentPage"/> to Edit the <see cref="CurrentAgent"/>
+        /// </summary>
         private void EditAgent()
         {
             if (CurrentAgent.Equals(default(Agent)))
                 return;
             ViewModelLocator.ApplicationViewModel.GoToPage(ApplicationPage.EditAgentPage);
         }
-        private void SortAgents(string s)
+        /// <summary>
+        /// Sorts The Agents in Property order
+        /// </summary>
+        /// <param name="sortPropertyName">The property name to sort for</param>
+        private void SortAgents(string sortPropertyName)
         {
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(Agents);
             collectionView?.SortDescriptions.Clear();
-            if (s != "None")
+            if (sortPropertyName != "None")
             {
-                var sortDesc = new SortDescription(s, ListSortDirection.Ascending);
+                var sortDesc = new SortDescription(sortPropertyName, ListSortDirection.Ascending);
                 collectionView?.SortDescriptions.Add(sortDesc);
             }
         }
-
+        /// <summary>
+        /// Remove the agent at <see cref="SelectedIndex"/> from the <see cref="Agents"/>
+        /// </summary>
         private void DeleteAgent()
         {
             if (SelectedIndex < 0 || SelectedIndex > Agents.Count)
                 return;
             Agents.RemoveAt(SelectedIndex);
         }
-
+        /// <summary>
+        /// Clears <see cref="Agents"/>, Sets <see cref="CurrentAgent"/> to default agent and resets the <see cref="SelectedIndex"/>
+        /// </summary>
         private void ResetAgents()
         {
             SelectedIndex = -1;
             CurrentAgent = new Agent();
             Agents.Clear();
         }
-
+        /// <summary>
+        /// Chooses the previous agent if no agent chosen do nothing.
+        /// </summary>
         private void PreviousAgent()
         {
             if (SelectedIndex > -1)
@@ -203,6 +218,9 @@ namespace GUI_AgentAssignments
             }
         }
 
+        /// <summary>
+        /// Chooses the NextAgent in the list
+        /// </summary>
         private void NextAgent()
         {
             if (Agents.Count > SelectedIndex)
@@ -211,10 +229,19 @@ namespace GUI_AgentAssignments
             }
         }
 
-
+        /// <summary>
+        /// Publishes the <see cref="Agents"/> to the <see cref="EventAggregator"/>
+        /// </summary>
         private void RespondToAgentsListRequest()
         {
             _eventAggregator.GetEvent<ReceiveAgentsListsEvent>().Publish(Agents);
+        }
+        /// <summary>
+        /// Publishes the <see cref="CurrentAgent"/> to the <see cref="EventAggregator"/>
+        /// </summary>
+        private void RespondToCurrentAgentRequest()
+        {
+            _eventAggregator.GetEvent<ReceiveCurrentAgentEvent>().Publish(CurrentAgent);
         }
         #endregion
     }

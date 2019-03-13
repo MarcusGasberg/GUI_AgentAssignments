@@ -11,17 +11,32 @@ using Prism.Events;
 
 namespace GUI_AgentAssignments
 {
+    /// <summary>
+    /// ViewModel for the <see cref="AgentPage"/>
+    /// </summary>
     public class AddAgentViewModel : BaseViewModel
     {
+        #region Private Fields
+
         private ICommand _addAgentCommand;
         private ICommand _cancelCommand;
-        private readonly IEventAggregator _eventAggregator;
+        private readonly IEventAggregator _eventAggregator; 
+        #endregion
+        #region Default Constructor
+
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public AddAgentViewModel()
         {
             _eventAggregator = EventAggregatorSingleton.Instance;
             NewAgent = new Agent();
         }
+        #endregion
+        #region Properties
         public Agent NewAgent { get; set; }
+        #endregion
+        #region Commands
 
         public ICommand AddAgentCommand
         {
@@ -34,6 +49,8 @@ namespace GUI_AgentAssignments
             get => _cancelCommand ?? new DelegateCommand<Window>(w => w.Close());
             private set => _cancelCommand = value;
         }
+        #endregion
+        #region Private Helpers
 
         private void AddAgent()
         {
@@ -47,6 +64,7 @@ namespace GUI_AgentAssignments
 
             _eventAggregator.GetEvent<AddAgentCommand>().Publish(agentToAdd);
             ViewModelLocator.ApplicationViewModel.GoToPage(ApplicationPage.AgentPage);
-        }
+        } 
+        #endregion
     }
 }
