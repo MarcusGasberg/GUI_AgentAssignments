@@ -31,7 +31,7 @@ namespace GUI_AgentAssignments
 
         public ICommand CancelCommand
         {
-            get => _cancelCommand ?? new DelegateCommand<Window>(w => w.Close());
+            get => _cancelCommand ?? new DelegateCommand(()=>ViewModelLocator.ApplicationViewModel.GoToPage(ApplicationPage.AgentPage));
             private set => _cancelCommand = value;
         }
 

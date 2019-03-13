@@ -19,7 +19,7 @@ namespace GUI_AgentAssignments
             get =>_applicationPage;
             private set
             {
-                if (CurrentPage == value)
+                if (_applicationPage == value)
                     return;
                 _applicationPage = value;
                 OnPropertyChanged(nameof(CurrentPage));
