@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace GUI_AgentAssignments
 {
+    /// <summary>
+    /// Converts a <see cref="ApplicationPage"/> to a <see cref="BasePage{VM}"/>
+    /// </summary>
     class ApplicationPageValueConverter : BaseValueConverter<ApplicationPageValueConverter>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)

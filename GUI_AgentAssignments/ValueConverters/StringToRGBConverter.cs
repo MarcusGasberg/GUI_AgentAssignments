@@ -8,7 +8,10 @@ using System.Windows.Media;
 
 namespace GUI_AgentAssignments
 {
-    class StringToRGBConverter : BaseValueConverter<StringToRGBConverter>
+    /// <summary>
+    /// Converts a String to a RGB value
+    /// </summary>
+    public class StringToRGBConverter : BaseValueConverter<StringToRGBConverter>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
